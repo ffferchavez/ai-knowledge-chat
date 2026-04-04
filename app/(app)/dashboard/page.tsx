@@ -1,42 +1,42 @@
-import Link from "next/link";
-
-import { siteConfig } from "@/lib/config";
-
 export const metadata = {
-  title: `Dashboard — ${siteConfig.name}`,
+  title: "Workspace — Helion Intelligence",
 };
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-full bg-[#050816] px-6 py-12 text-zinc-100">
-      <div className="mx-auto max-w-3xl">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-cyan-400/80">
-          {siteConfig.org.city}
+    <div className="min-h-full py-10">
+      <div className="helion-shell">
+        <p className="helion-kicker">Workspace</p>
+        <h1 className="mt-3 text-5xl font-medium tracking-tight text-[#101012]">
+          Hi, welcome back
+        </h1>
+        <p className="mt-4 max-w-3xl text-lg text-[#5f5f65]">
+          Set up your company knowledge, index sources, and run grounded Q&amp;A
+          from one workspace.
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-2 max-w-xl text-zinc-400">
-          Authenticated shell, organization summary, and shortcuts land here in
-          Phase 3. Routes under{" "}
-          <code className="rounded bg-white/10 px-1.5 py-0.5 text-xs text-cyan-200">
-            (app)
-          </code>{" "}
-          will be protected by middleware in Phase 2.
-        </p>
-        <ul className="mt-10 space-y-3 text-sm text-zinc-300">
-          <li className="flex items-center justify-between rounded-lg border border-white/10 bg-white/3 px-4 py-3">
-            <span>Knowledge &amp; documents</span>
-            <span className="text-xs text-zinc-500">Coming Phase 4–5</span>
-          </li>
-          <li className="flex items-center justify-between rounded-lg border border-white/10 bg-white/3 px-4 py-3">
-            <span>Chat</span>
-            <span className="text-xs text-zinc-500">Coming Phase 6–7</span>
-          </li>
-        </ul>
-        <p className="mt-10">
-          <Link href="/" className="text-sm text-cyan-400/90 hover:text-cyan-300">
-            ← Marketing home
-          </Link>
-        </p>
+
+        <div className="mt-12 grid gap-4 sm:grid-cols-2">
+          <div className="helion-panel p-6">
+            <p className="helion-kicker">Sources</p>
+            <p className="mt-3 text-4xl">0</p>
+          </div>
+          <div className="helion-panel p-6">
+            <p className="helion-kicker">Chat sessions</p>
+            <p className="mt-3 text-4xl">0</p>
+          </div>
+        </div>
+
+        <div className="mt-12 helion-rule" />
+        <div className="grid">
+          <div className="flex h-20 items-center justify-between border-b border-[#c8c8cc] pr-1 text-3xl tracking-tight text-[#111114]">
+            <span>Set up your sources</span>
+            <span className="text-sm text-[#6f6f73]">Coming in Phase 4b</span>
+          </div>
+          <div className="flex h-20 items-center justify-between border-b border-[#c8c8cc] pr-1 text-3xl tracking-tight text-[#111114]">
+            <span>Start a grounded chat</span>
+            <span className="text-sm text-[#6f6f73]">Coming in Phase 6</span>
+          </div>
+        </div>
       </div>
     </div>
   );

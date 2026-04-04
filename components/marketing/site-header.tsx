@@ -4,28 +4,28 @@ import { siteConfig } from "@/lib/config";
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-white/10 bg-[#050816]/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+    <header className="helion-rule">
+      <div className="helion-shell flex h-14 items-center justify-between">
         <Link href="/" className="group flex items-baseline gap-2">
-          <span className="text-sm font-semibold tracking-tight text-white">
-            {siteConfig.name}
+          <span className="text-sm tracking-[0.22em] text-[#121214]">
+            HELION INTELLIGENCE
           </span>
-          <span className="hidden text-xs text-zinc-500 group-hover:text-zinc-400 sm:inline">
+          <span className="hidden text-[0.62rem] uppercase tracking-[0.24em] text-[#7b7b81] sm:inline">
             {siteConfig.org.serviceLine}
           </span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
+        <nav className="flex items-center gap-2 text-sm">
           <Link
             href="/login"
-            className="text-zinc-400 transition-colors hover:text-white"
+            className="inline-flex h-9 items-center border border-[#c7c7cc] px-4 text-xs text-[#1a1a1d] transition hover:bg-[#e8e8ea]"
           >
-            Sign in
+            Log in
           </Link>
           <Link
             href="/signup"
-            className="rounded-full bg-cyan-500/15 px-4 py-2 font-medium text-cyan-300 ring-1 ring-cyan-400/30 transition hover:bg-cyan-500/25"
+            className="helion-btn-primary inline-flex items-center"
           >
-            Get started
+            Sign up
           </Link>
         </nav>
       </div>

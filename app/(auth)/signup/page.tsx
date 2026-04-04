@@ -1,37 +1,60 @@
 import Link from "next/link";
 
-import { siteConfig } from "@/lib/config";
-
 export const metadata = {
-  title: `Create account — ${siteConfig.name}`,
+  title: "Create account — Helion Intelligence",
 };
 
 export default function SignupPage() {
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-[#050816] px-6 py-16 text-zinc-100">
-      <div className="mx-auto w-full max-w-sm">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-cyan-400/80">
-          {siteConfig.org.serviceLine}
-        </p>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight">
-          Create your workspace
+    <div className="flex min-h-full flex-1 items-center justify-center px-6 py-14">
+      <div className="helion-panel w-full max-w-md p-9">
+        <p className="helion-kicker">Account</p>
+        <h1 className="mt-3 text-4xl font-medium tracking-tight text-[#101012]">
+          Create an account
         </h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Signup will provision your profile, organization, and default
-          knowledge base via Supabase (see migration trigger). Implemented in
-          Phase 2.
+        <p className="mt-3 text-sm text-[#66666c]">
+          Takes about a minute. No credit card.
         </p>
-        <div className="mt-10 rounded-xl border border-white/10 bg-white/3 p-6 text-sm text-zinc-500">
-          Registration form placeholder
-        </div>
-        <p className="mt-8 text-center text-sm text-zinc-500">
+
+        <form className="mt-8 space-y-4">
+          <label className="block text-[0.82rem] text-[#303035]">
+            Your name
+            <input
+              className="helion-input mt-1.5"
+              type="text"
+              placeholder="Alex Rivera"
+              disabled
+            />
+          </label>
+          <label className="block text-[0.82rem] text-[#303035]">
+            Email
+            <input
+              className="helion-input mt-1.5"
+              type="email"
+              placeholder="you@company.com"
+              disabled
+            />
+          </label>
+          <label className="block text-[0.82rem] text-[#303035]">
+            Password
+            <input className="helion-input mt-1.5" type="password" disabled />
+            <span className="mt-1 block text-xs text-[#7b7b81]">
+              At least 8 characters.
+            </span>
+          </label>
+          <button type="button" className="helion-btn-primary mt-2 w-full">
+            Create account
+          </button>
+        </form>
+
+        <p className="mt-7 text-center text-sm text-[#68686e]">
           Already have an account?{" "}
-          <Link href="/login" className="text-cyan-400 hover:text-cyan-300">
+          <Link href="/login" className="underline underline-offset-3">
             Sign in
           </Link>
         </p>
-        <p className="mt-6 text-center">
-          <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-300">
+        <p className="mt-6 text-center text-sm text-[#68686e]">
+          <Link href="/" className="underline underline-offset-3">
             ← Back to home
           </Link>
         </p>

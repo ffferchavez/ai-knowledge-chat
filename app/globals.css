@@ -1,20 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050816;
-  --foreground: #f4f4f5;
-  --accent: #22d3ee;
+  --background: #efefef;
+  --foreground: #0f0f10;
+  --muted: #6f6f73;
+  --line: #c8c8cc;
+  --surface: #f3f3f4;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.helion-shell {
+  width: min(1120px, calc(100% - 3rem));
+  margin-inline: auto;
+}
+
+.helion-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.helion-rule {
+  border-top: 1px solid var(--line);
+}
+
+.helion-panel {
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.helion-input {
+  width: 100%;
+  border: 1px solid #9b9ba1;
+  background: #ececee;
+  color: var(--foreground);
+  height: 2.6rem;
+  padding: 0 0.8rem;
+  font-size: 0.9rem;
+}
+
+.helion-input:focus-visible,
+.helion-textarea:focus-visible {
+  outline: 1px solid #0f0f10;
+  outline-offset: 1px;
+}
+
+.helion-textarea {
+  width: 100%;
+  border: 1px solid #9b9ba1;
+  background: #ececee;
+  color: var(--foreground);
+  min-height: 6.5rem;
+  padding: 0.8rem;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+
+.helion-btn-primary {
+  border: 1px solid #0f0f10;
+  background: #0f0f10;
+  color: #f6f6f7;
+  height: 2.6rem;
+  padding: 0 1rem;
+  font-size: 0.87rem;
+  font-weight: 500;
+}
+
+.helion-btn-secondary {
+  border: 1px solid #9b9ba1;
+  background: transparent;
+  color: #1a1a1d;
+  height: 2.6rem;
+  padding: 0 1rem;
+  font-size: 0.87rem;
 }

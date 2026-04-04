@@ -1,36 +1,48 @@
 import Link from "next/link";
 
-import { siteConfig } from "@/lib/config";
-
 export const metadata = {
-  title: `Sign in — ${siteConfig.name}`,
+  title: "Log in — Helion Intelligence",
 };
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-full flex-1 flex-col bg-[#050816] px-6 py-16 text-zinc-100">
-      <div className="mx-auto w-full max-w-sm">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-cyan-400/80">
-          {siteConfig.org.serviceLine}
-        </p>
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight">
-          Sign in to {siteConfig.name}
+    <div className="flex min-h-full flex-1 items-center justify-center px-6 py-14">
+      <div className="helion-panel w-full max-w-md p-9">
+        <p className="helion-kicker">Account</p>
+        <h1 className="mt-3 text-4xl font-medium tracking-tight text-[#101012]">
+          Log in
         </h1>
-        <p className="mt-2 text-sm text-zinc-400">
-          Supabase authentication will be wired in Phase 2. This route reserves
-          the URL and layout for the real login form.
+        <p className="mt-3 text-sm text-[#66666c]">
+          Use the email and password you signed up with.
         </p>
-        <div className="mt-10 rounded-xl border border-white/10 bg-white/3 p-6 text-sm text-zinc-500">
-          Email / password form placeholder
-        </div>
-        <p className="mt-8 text-center text-sm text-zinc-500">
-          No account?{" "}
-          <Link href="/signup" className="text-cyan-400 hover:text-cyan-300">
-            Create one
+
+        <form className="mt-8 space-y-4">
+          <label className="block text-[0.82rem] text-[#303035]">
+            Email
+            <input
+              className="helion-input mt-1.5"
+              type="email"
+              placeholder="you@company.com"
+              disabled
+            />
+          </label>
+          <label className="block text-[0.82rem] text-[#303035]">
+            Password
+            <input className="helion-input mt-1.5" type="password" disabled />
+          </label>
+          <button type="button" className="helion-btn-primary mt-2 w-full">
+            Log in
+          </button>
+        </form>
+
+        <p className="mt-7 text-center text-sm text-[#68686e]">
+          New here?{" "}
+          <Link href="/signup" className="underline underline-offset-3">
+            Sign up
           </Link>
         </p>
-        <p className="mt-6 text-center">
-          <Link href="/" className="text-sm text-zinc-500 hover:text-zinc-300">
+        <p className="mt-6 text-center text-sm text-[#68686e]">
+          <Link href="/" className="underline underline-offset-3">
             ← Back to home
           </Link>
         </p>
