@@ -1,20 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #efefef;
-  --foreground: #0f0f10;
-  --muted: #6f6f73;
-  --line: #c8c8cc;
-  --surface: #f3f3f4;
+  --ui-bg: #fafafa;
+  --ui-bg-muted: #f4f4f5;
+  --ui-ink: #0a0a0a;
+  --ui-ink-deep: #050505;
+  --ui-surface: #f4f4f5;
+  --ui-surface-hover: #e4e4e7;
+  --ui-line: #0a0a0a;
+  --ui-line-soft: rgba(10, 10, 10, 0.1);
+  --ui-text: #0a0a0a;
+  --ui-muted: #52525b;
+  --ui-muted-dim: #71717a;
+  --ui-yellow: #facc15;
+  --ui-yellow-bright: #ffea00;
+  --ui-yellow-muted: rgba(250, 204, 21, 0.22);
+  --ui-accent: #0d9488;
+  --ui-accent-hover: #0f766e;
+  --ui-accent-muted: rgba(13, 148, 136, 0.12);
+  --ui-on-accent: #ffffff;
+  --ui-warning: #9a3412;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-line: var(--line);
-  --color-surface: var(--surface);
-  --font-sans: var(--font-geist-sans);
+  --color-background: var(--ui-bg);
+  --color-foreground: var(--ui-text);
+  --color-ui-bg: var(--ui-bg);
+  --color-ui-text: var(--ui-text);
+  --color-ui-ink: var(--ui-ink);
+  --color-ui-ink-deep: var(--ui-ink-deep);
+  --color-ui-elevated: #ffffff;
+  --color-ui-surface: var(--ui-surface);
+  --color-ui-surface-hover: var(--ui-surface-hover);
+  --color-ui-yellow: var(--ui-yellow);
+  --color-ui-yellow-bright: var(--ui-yellow-bright);
+  --color-ui-accent: var(--ui-accent);
+  --color-ui-accent-hover: var(--ui-accent-hover);
+  --color-ui-accent-muted: var(--ui-accent-muted);
+  --color-ui-on-accent: var(--ui-on-accent);
+  --color-ui-muted: var(--ui-muted);
+  --color-ui-muted-dim: var(--ui-muted-dim);
+  --color-ui-warning: var(--ui-warning);
+  --font-sans: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
@@ -25,10 +52,10 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
-  letter-spacing: -0.01em;
+  background-color: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
 }
 
 a {
@@ -36,69 +63,12 @@ a {
   text-decoration: none;
 }
 
-.helion-shell {
-  width: min(1120px, calc(100% - 3rem));
-  margin-inline: auto;
+/* Safe-area top for public/app headers. */
+.public-header-safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
-.helion-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.26em;
-  font-size: 0.62rem;
-  color: var(--muted);
-}
-
-.helion-rule {
-  border-top: 1px solid var(--line);
-}
-
-.helion-panel {
-  border: 1px solid var(--line);
-  background: var(--surface);
-}
-
-.helion-input {
-  width: 100%;
-  border: 1px solid #9b9ba1;
-  background: #ececee;
-  color: var(--foreground);
-  height: 2.6rem;
-  padding: 0 0.8rem;
-  font-size: 0.9rem;
-}
-
-.helion-input:focus-visible,
-.helion-textarea:focus-visible {
-  outline: 1px solid #0f0f10;
-  outline-offset: 1px;
-}
-
-.helion-textarea {
-  width: 100%;
-  border: 1px solid #9b9ba1;
-  background: #ececee;
-  color: var(--foreground);
-  min-height: 6.5rem;
-  padding: 0.8rem;
-  font-size: 0.9rem;
-  resize: vertical;
-}
-
-.helion-btn-primary {
-  border: 1px solid #0f0f10;
-  background: #0f0f10;
-  color: #f6f6f7;
-  height: 2.6rem;
-  padding: 0 1rem;
-  font-size: 0.87rem;
-  font-weight: 500;
-}
-
-.helion-btn-secondary {
-  border: 1px solid #9b9ba1;
-  background: transparent;
-  color: #1a1a1d;
-  height: 2.6rem;
-  padding: 0 1rem;
-  font-size: 0.87rem;
+::selection {
+  background: var(--ui-yellow-muted);
+  color: var(--ui-ink-deep);
 }
