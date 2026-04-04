@@ -6,21 +6,18 @@ export default function DashboardPage() {
   const rows = [
     {
       kicker: "Sources",
-      title: "Set up your knowledge sources",
-      body: "Upload files and add website URLs so the system can build your evidence base.",
-      phase: "Phase 4b",
+      title: "Set up your source context",
+      body: "Files, websites, and source links that guide every answer.",
     },
     {
       kicker: "Chat",
       title: "Start grounded conversations",
-      body: "Ask practical business questions and get answers constrained to your indexed sources.",
-      phase: "Phase 6",
+      body: "Ask practical business questions and get answer packs with references.",
     },
     {
       kicker: "Saved",
       title: "Review session history",
       body: "Open past sessions with citations and continue from prior context.",
-      phase: "Phase 7",
     },
   ] as const;
 
@@ -31,7 +28,7 @@ export default function DashboardPage() {
           Workspace
         </p>
         <h1 className="mt-3 text-2xl font-medium tracking-[-0.03em] text-ui-text sm:mt-4 sm:text-3xl md:text-4xl">
-          Hi, welcome back
+          Hi, Manuel Fernando
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ui-muted sm:mt-6 sm:text-base">
           Set up your company knowledge, index sources, and run grounded Q&amp;A
@@ -43,25 +40,25 @@ export default function DashboardPage() {
               Sources
             </p>
             <p className="mt-2 text-2xl font-medium tabular-nums tracking-tight text-ui-text sm:text-3xl">
-              0
+              2
             </p>
           </div>
           <div className="min-h-[100px] bg-ui-bg px-4 py-4 sm:px-5 sm:py-5">
             <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">
-              Chat sessions
+              Saved packs
             </p>
             <p className="mt-2 text-2xl font-medium tabular-nums tracking-tight text-ui-text sm:text-3xl">
-              0
+              15
             </p>
           </div>
         </div>
       </header>
 
-      <section className="mt-0 w-full border-t border-black">
+      <nav className="mt-0 w-full border-t border-black" aria-label="Workspace">
         {rows.map((row) => (
           <div
             key={row.title}
-            className="group flex w-full min-w-0 items-start justify-between gap-4 border-b border-black py-8 sm:gap-8 sm:py-10"
+            className="group flex w-full min-w-0 items-start justify-between gap-4 border-b border-black py-8 transition-colors hover:bg-neutral-50 sm:gap-8 sm:py-10"
           >
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">
@@ -74,12 +71,15 @@ export default function DashboardPage() {
                 {row.body}
               </p>
             </div>
-            <span className="shrink-0 pt-0.5 text-[11px] uppercase tracking-[0.16em] text-ui-muted sm:pt-1">
-              {row.phase}
+            <span
+              className="shrink-0 pt-0.5 text-2xl font-extralight leading-none text-ui-muted transition-colors group-hover:text-ui-text sm:pt-1 sm:text-3xl"
+              aria-hidden
+            >
+              ›
             </span>
           </div>
         ))}
-      </section>
+      </nav>
     </div>
   );
 }
