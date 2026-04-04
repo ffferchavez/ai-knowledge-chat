@@ -37,7 +37,15 @@ function AppSidebarPlaceholder() {
   );
 }
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  displayName,
+  initials,
+  children,
+}: {
+  displayName: string;
+  initials: string;
+  children: React.ReactNode;
+}) {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const shellReady = useSyncExternalStore(
     () => () => {},
@@ -94,8 +102,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <AppSidebar
             mobileOpen={mobileNavOpen}
             onMobileOpenChange={setMobileNavOpen}
-            displayName="Manuel Fernando"
-            initials="MF"
+            displayName={displayName}
+            initials={initials}
           />
         ) : (
           <AppSidebarPlaceholder />
