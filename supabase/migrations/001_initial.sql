@@ -9,21 +9,6 @@ CREATE EXTENSION IF NOT EXISTS vector;
 -- -----------------------------------------------------------------------------
 -- Helper functions (SECURITY DEFINER + fixed search_path)
 -- -----------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION public.is_org_member(org_id uuid)
-RETURNS boolean
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT EXISTS (
-    SELECT 1
-    FROM public.organization_members om
-    WHERE om.organization_id = org_id
-      AND om.user_id = auth.uid()
-  );
-$$;
-
 CREATE OR REPLACE FUNCTION public.set_updated_at()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -131,6 +116,21 @@ CREATE TABLE public.usage_events (
   metadata jsonb NOT NULL DEFAULT '{}'::jsonb,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE OR REPLACE FUNCTION public.is_org_member(org_id uuid)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.organization_members om
+    WHERE om.organization_id = org_id
+      AND om.user_id = auth.uid()
+  );
+$$;
 
 -- -----------------------------------------------------------------------------
 -- Indexes
