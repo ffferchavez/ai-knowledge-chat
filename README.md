@@ -1,6 +1,6 @@
 # AI Knowledge Chat
 
-Production-lean MVP for **Helion City** under the **Helion Intelligence** service line: a SaaS-style AI knowledge assistant where authenticated users upload business documents and ask questions with citations.
+Production-lean MVP for **Helion City** under the **Helion Intelligence** service line: a SaaS-style AI knowledge assistant where authenticated users build a knowledge base from **uploaded files and (Phase 4b) websites**, then ask questions with citations.
 
 ## Stack
 
@@ -45,14 +45,12 @@ Never expose `SUPABASE_SERVICE_ROLE_KEY` or `OPENAI_API_KEY` to the browser.
 
 ### 3. Database and storage
 
-Apply migrations using the [Supabase CLI](https://supabase.com/docs/guides/cli) or paste `supabase/migrations/001_initial.sql` into the SQL Editor in the Supabase dashboard.
+Apply migrations in order using the [Supabase CLI](https://supabase.com/docs/guides/cli) or paste each file into the SQL Editor in the Supabase dashboard:
 
-This migration:
+1. **`supabase/migrations/001_initial.sql`** — enables **pgvector**, core tables and **RLS**, private **`knowledge-files`** bucket, **`auth.users`** trigger (profile + default org + KB).
+2. **`supabase/migrations/002_sources_ingestion_jobs.sql`** (Phase 4b) — **`sources`**, **`source_pages`**, **`ingestion_jobs`**, links **file** rows through `documents.source_id`, and allows **chunks** from either a file (`document_id`) or a web page (`source_page_id`).
 
-- Enables **pgvector**
-- Creates application tables and **RLS policies**
-- Registers the private **`knowledge-files`** storage bucket and object policies
-- Adds an **`auth.users`** trigger to create a profile, default organization, membership, and knowledge base for each new user
+See [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) §7 and **§7b** for Phase 4b routes, UI, and job-runner options.
 
 Confirm **Authentication → Providers** matches your desired login method (email, etc.).
 
@@ -72,7 +70,7 @@ curl -s http://localhost:3000/api/health
 
 ## Project documentation
 
-- Full roadmap, routes, and phases: [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md)
+- Full roadmap, routes, phases, and Phase 4b (sources / URL ingest / jobs): [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md)
 
 ## Scripts
 
