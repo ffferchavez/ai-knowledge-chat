@@ -2,7 +2,10 @@ import { redirect } from "next/navigation";
 
 import { DeleteDocumentButton } from "@/components/knowledge/delete-document-button";
 import { DocumentUploadForm } from "@/components/knowledge/document-upload-form";
+import { EditTextSourceButton } from "@/components/knowledge/edit-text-source-button";
 import { IndexDocumentButton } from "@/components/knowledge/index-document-button";
+import { TextSourceForm } from "@/components/knowledge/text-source-form";
+import { WebsiteSourceForm } from "@/components/knowledge/website-source-form";
 import { formatBytes } from "@/lib/format-bytes";
 import { createClient } from "@/lib/supabase/server";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
@@ -26,6 +29,11 @@ function statusLabel(status: string) {
   }
 }
 
+function sourceTypeLabel(mimeType: string | null) {
+  if (mimeType?.startsWith("text/plain")) return "Text";
+  return "File";
+}
+
 export default async function KnowledgePage() {
   const snap = await getWorkspaceSnapshot();
   if (!snap) {
@@ -40,6 +48,13 @@ export default async function KnowledgePage() {
     )
     .eq("knowledge_base_id", snap.knowledgeBase.id)
     .order("created_at", { ascending: false });
+  const { data: webSources } = await supabase
+    .from("sources")
+    .select("id, title, status, error_message, created_at")
+    .eq("knowledge_base_id", snap.knowledgeBase.id)
+    .eq("source_type", "web")
+    .order("created_at", { ascending: false })
+    .limit(20);
 
   const rows = documents ?? [];
 
@@ -54,7 +69,8 @@ export default async function KnowledgePage() {
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ui-muted sm:mt-6 sm:text-base">
           {snap.organization.name} · {snap.knowledgeBase.name}. Upload files to
-          your private bucket; ingestion and embeddings ship in the next phases.
+          your private bucket; ingestion queues automatically and embeddings are
+          stored in pgvector.
         </p>
       </header>
 
@@ -65,9 +81,20 @@ export default async function KnowledgePage() {
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ui-muted">
           {docsError
             ? `Could not load documents: ${docsError.message}`
-            : "Upload PDF, TXT, or Word documents. Each file is stored under your organization path in Supabase Storage."}
+            : "Upload PDF, TXT, or Word documents. Small files index inline; larger files are queued for the ingestion worker."}
         </p>
         {!docsError ? <DocumentUploadForm /> : null}
+      </section>
+
+      <section className="w-full border-t border-black py-8 sm:py-10">
+        <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">
+          Text
+        </p>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ui-muted">
+          Add plain text directly to your knowledge base, then view/edit/reindex
+          it like any other source.
+        </p>
+        {!docsError ? <TextSourceForm /> : null}
       </section>
 
       {!docsError ? (
@@ -86,6 +113,9 @@ export default async function KnowledgePage() {
                   <tr className="border-b border-black">
                     <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">
                       Name
+                    </th>
+                    <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">
+                      Type
                     </th>
                     <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">
                       Status
@@ -118,6 +148,11 @@ export default async function KnowledgePage() {
                           </p>
                         ) : null}
                       </td>
+                      <td className="py-4 pr-4 align-top">
+                        <span className="inline-flex items-center border border-black/20 bg-white px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-ui-muted">
+                          {sourceTypeLabel(doc.mime_type)}
+                        </span>
+                      </td>
                       <td className="py-4 pr-4 align-top text-ui-muted">
                         {statusLabel(doc.status)}
                       </td>
@@ -137,6 +172,9 @@ export default async function KnowledgePage() {
                       </td>
                       <td className="py-4 align-top">
                         <div className="flex flex-col items-end gap-3">
+                          {doc.mime_type?.startsWith("text/plain") ? (
+                            <EditTextSourceButton documentId={doc.id} />
+                          ) : null}
                           <IndexDocumentButton
                             documentId={doc.id}
                             status={doc.status}
@@ -161,9 +199,30 @@ export default async function KnowledgePage() {
           URL ingest &amp; crawl
         </p>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ui-muted sm:mt-3">
-          Phase 4b adds seed URLs, bounded fetch, and the shared sources model
-          next to files.
+          Add a URL and we fetch, extract, embed, and index the page through the
+          same ingestion jobs pipeline.
         </p>
+        {!docsError ? <WebsiteSourceForm /> : null}
+        {webSources && webSources.length > 0 ? (
+          <div className="mt-6 space-y-2 border-t border-black/20 pt-4">
+            {webSources.map((source) => (
+              <div
+                key={source.id}
+                className="flex flex-wrap items-center justify-between gap-2 border border-black/20 bg-white px-3 py-2 text-sm"
+              >
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-ui-text">{source.title}</p>
+                  {source.error_message ? (
+                    <p className="text-xs text-ui-warning">{source.error_message}</p>
+                  ) : null}
+                </div>
+                <span className="text-xs uppercase tracking-[0.15em] text-ui-muted-dim">
+                  {statusLabel(source.status)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </section>
     </div>
   );

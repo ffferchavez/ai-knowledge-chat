@@ -27,7 +27,7 @@ export function IndexDocumentButton({
       });
       const body = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
-        setError(typeof body.error === "string" ? body.error : "Indexing failed.");
+        setError(typeof body.error === "string" ? body.error : "Queueing failed.");
         return;
       }
       router.refresh();
@@ -44,7 +44,13 @@ export function IndexDocumentButton({
         disabled={disabled}
         className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-text hover:underline disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {pending ? "Indexing…" : status === "ready" ? "Reindex" : "Index now"}
+        {pending
+          ? "Queueing…"
+          : status === "failed"
+            ? "Retry"
+            : status === "ready"
+              ? "Reindex"
+              : "Index now"}
       </button>
       {error ? (
         <p className="max-w-[14rem] text-right text-xs text-ui-warning" role="alert">

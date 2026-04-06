@@ -1,8 +1,29 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+import { SavedSessionActions } from "@/components/chat/saved-session-actions";
+import { createClient } from "@/lib/supabase/server";
+import { getWorkspaceSnapshot } from "@/lib/workspace";
+
 export const metadata = {
   title: "Saved — Helion Intelligence",
 };
 
-export default function SavedPage() {
+export default async function SavedPage() {
+  const workspace = await getWorkspaceSnapshot();
+  if (!workspace) {
+    redirect("/login");
+  }
+
+  const supabase = await createClient();
+  const { data: sessions } = await supabase
+    .from("chat_sessions")
+    .select("id, title, updated_at")
+    .eq("knowledge_base_id", workspace.knowledgeBase.id)
+    .eq("user_id", workspace.profile.id)
+    .order("updated_at", { ascending: false })
+    .limit(50);
+
   return (
     <div className="flex w-full min-w-0 flex-col">
       <header className="w-full border-b border-black pb-8 sm:pb-10">
@@ -16,15 +37,37 @@ export default function SavedPage() {
           Review previous answers and reuse grounded outputs.
         </p>
       </header>
-      <section className="mt-0 w-full border-t border-black">
-        <div className="border-b border-black py-8 sm:py-10">
-          <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">
-            Coming next
-          </p>
-          <p className="mt-2 text-lg font-medium tracking-[-0.02em] text-ui-text sm:mt-3 sm:text-xl md:text-2xl">
-            Saved sessions list with timestamps and source coverage.
-          </p>
-        </div>
+      <section className="mt-0 w-full border-t border-black py-8 sm:py-10">
+        {!sessions || sessions.length === 0 ? (
+          <p className="text-sm text-ui-muted">No saved sessions yet.</p>
+        ) : (
+          <div className="space-y-4">
+            {sessions.map((session) => (
+              <article
+                key={session.id}
+                className="border border-black/20 bg-white px-4 py-4"
+              >
+                <Link
+                  href={`/chat/${session.id}`}
+                  className="text-base font-medium text-ui-text underline-offset-4 hover:underline"
+                >
+                  {session.title || "Untitled session"}
+                </Link>
+                <p className="mt-1 text-xs uppercase tracking-[0.14em] text-ui-muted-dim">
+                  Updated{" "}
+                  {new Date(session.updated_at).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </p>
+                <SavedSessionActions
+                  sessionId={session.id}
+                  initialTitle={session.title || "Untitled session"}
+                />
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

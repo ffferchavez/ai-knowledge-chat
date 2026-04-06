@@ -1,14 +1,15 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { ChatClient } from "@/components/chat/chat-client";
 import { createClient } from "@/lib/supabase/server";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
 
-export const metadata = {
-  title: "Chat — Helion Intelligence",
+type ChatSessionPageProps = {
+  params: Promise<{ sessionId: string }>;
 };
 
-export default async function ChatPage() {
+export default async function ChatSessionPage({ params }: ChatSessionPageProps) {
+  const { sessionId } = await params;
   const workspace = await getWorkspaceSnapshot();
   if (!workspace) {
     redirect("/login");
@@ -22,6 +23,17 @@ export default async function ChatPage() {
     .eq("user_id", workspace.profile.id)
     .order("updated_at", { ascending: false })
     .limit(20);
+
+  const hasSession = (sessions ?? []).some((s) => s.id === sessionId);
+  if (!hasSession) {
+    notFound();
+  }
+
+  const { data: messages } = await supabase
+    .from("chat_messages")
+    .select("id, session_id, role, content, citations, created_at")
+    .eq("session_id", sessionId)
+    .order("created_at", { ascending: true });
 
   return (
     <div className="flex w-full min-w-0 flex-col">
@@ -38,10 +50,10 @@ export default async function ChatPage() {
         </p>
       </header>
       <ChatClient
-        key="chat-new"
+        key={`chat-session-${sessionId}`}
         initialSessions={sessions ?? []}
-        initialMessages={[]}
-        initialSessionId={null}
+        initialMessages={(messages ?? []) as Parameters<typeof ChatClient>[0]["initialMessages"]}
+        initialSessionId={sessionId}
       />
     </div>
   );

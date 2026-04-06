@@ -64,8 +64,9 @@ export function DocumentUploadForm() {
             className="mt-2 block w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text file:mr-4 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50"
           />
           <p className="mt-2 text-xs leading-relaxed text-ui-muted">
-            PDF, TXT, or DOCX · up to 50 MB · indexing runs in a later pipeline
-            (status stays &quot;pending&quot; until then).
+            PDF, TXT, or DOCX · up to 50 MB · indexing starts automatically
+            after upload (inline for small files, queued worker for larger
+            files).
           </p>
         </div>
         <button

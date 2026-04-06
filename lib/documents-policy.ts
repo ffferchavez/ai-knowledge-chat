@@ -14,8 +14,21 @@ export const MAX_DOCUMENT_BYTES = 52428800; // 50 MiB, per bucket config
 export function isAllowedDocumentMime(
   mime: string | null | undefined,
 ): mime is AllowedDocumentMime {
-  if (!mime) return false;
-  return (ALLOWED_DOCUMENT_MIME_TYPES as readonly string[]).includes(mime);
+  return normalizeAllowedDocumentMime(mime) !== null;
+}
+
+/**
+ * Canonicalize MIME values like `text/plain; charset=utf-8`.
+ */
+export function normalizeAllowedDocumentMime(
+  mime: string | null | undefined,
+): AllowedDocumentMime | null {
+  if (!mime) return null;
+  const canonical = mime.split(";")[0]?.trim().toLowerCase();
+  if (!canonical) return null;
+  return (ALLOWED_DOCUMENT_MIME_TYPES as readonly string[]).includes(canonical)
+    ? (canonical as AllowedDocumentMime)
+    : null;
 }
 
 /** Browsers often leave `File.type` empty; map from extension when needed. */

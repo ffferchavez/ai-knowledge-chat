@@ -3,19 +3,13 @@ import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
 
 import {
-  ALLOWED_DOCUMENT_MIME_TYPES,
   KNOWLEDGE_BUCKET,
   MAX_DOCUMENT_BYTES,
-  mimeFromFilename,
-  normalizeAllowedDocumentMime,
   sanitizeDisplayFilename,
   storageObjectBasename,
 } from "@/lib/documents-policy";
-import {
-  queueDocumentIngestion,
-  shouldInlineIngest,
-} from "@/lib/server/ingestion-jobs";
 import { checkRateLimit } from "@/lib/server/rate-limit";
+import { queueDocumentIngestion } from "@/lib/server/ingestion-jobs";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
@@ -34,56 +28,42 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Workspace not found" }, { status: 403 });
   }
   const rate = await checkRateLimit({
-    key: `upload:${user.id}`,
-    limit: 8,
+    key: `text-source:${user.id}`,
+    limit: 20,
     windowMs: 60_000,
   });
   if (!rate.allowed) {
     return NextResponse.json(
-      { error: "Upload rate limit exceeded. Try again in a minute." },
+      { error: "Too many text source requests. Try again shortly." },
       { status: 429 },
     );
   }
 
-  let formData: FormData;
-  try {
-    formData = await request.formData();
-  } catch {
-    return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
-  }
-
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
+  const body = (await request.json().catch(() => ({}))) as {
+    title?: string;
+    content?: string;
+  };
+  const title = String(body.title ?? "").trim() || "Text source";
+  const content = String(body.content ?? "");
+  if (!content.trim()) {
     return NextResponse.json(
-      { error: "A non-empty file is required." },
+      { error: "Content is required." },
       { status: 400 },
     );
   }
 
-  if (file.size > MAX_DOCUMENT_BYTES) {
-    return NextResponse.json(
-      {
-        error: `File too large (max ${MAX_DOCUMENT_BYTES / (1024 * 1024)} MB).`,
-      },
-      { status: 400 },
-    );
-  }
-
-  const mime =
-    normalizeAllowedDocumentMime(file.type) ?? mimeFromFilename(file.name);
-  if (!mime) {
-    return NextResponse.json(
-      {
-        error: `Unsupported type. Allowed: PDF, TXT, DOCX (${ALLOWED_DOCUMENT_MIME_TYPES.join(", ")}).`,
-      },
-      { status: 400 },
-    );
-  }
-
-  const displayName = sanitizeDisplayFilename(file.name);
-  const objectBase = storageObjectBasename(file.name);
+  const filename = sanitizeDisplayFilename(`${title}.txt`);
+  const objectBase = storageObjectBasename(filename);
   const docId = randomUUID();
   const storagePath = `${workspace.organization.id}/${workspace.knowledgeBase.id}/${docId}/${objectBase}`;
+  const payload = Buffer.from(content, "utf8");
+
+  if (payload.byteLength > MAX_DOCUMENT_BYTES) {
+    return NextResponse.json(
+      { error: "Text source too large." },
+      { status: 400 },
+    );
+  }
 
   const { error: insertError } = await supabase.from("documents").insert({
     id: docId,
@@ -91,49 +71,48 @@ export async function POST(request: Request) {
     organization_id: workspace.organization.id,
     uploaded_by: user.id,
     storage_path: storagePath,
-    filename: displayName,
-    mime_type: mime,
-    size_bytes: file.size,
+    filename,
+    mime_type: "text/plain",
+    size_bytes: payload.byteLength,
     status: "pending",
   });
-
   if (insertError) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  const buf = Buffer.from(await file.arrayBuffer());
   const { error: uploadError } = await supabase.storage
     .from(KNOWLEDGE_BUCKET)
-    .upload(storagePath, buf, {
-      contentType: mime,
+    .upload(storagePath, payload, {
+      contentType: "text/plain",
       upsert: false,
     });
-
   if (uploadError) {
     await supabase.from("documents").delete().eq("id", docId);
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
   }
-
   await logUsageEvent(supabase, {
     organizationId: workspace.organization.id,
     userId: workspace.profile.id,
-    eventType: "document_uploaded",
-    metadata: { document_id: docId, filename: displayName, size_bytes: file.size },
+    eventType: "text_source_created",
+    metadata: { document_id: docId, bytes: payload.byteLength },
   });
 
-  let jobId: string | null = null;
-  let inlineError: string | null = null;
   try {
     const queued = await queueDocumentIngestion(supabase, {
       organizationId: workspace.organization.id,
       knowledgeBaseId: workspace.knowledgeBase.id,
       createdBy: user.id,
       documentId: docId,
-      sizeBytes: file.size,
+      sizeBytes: payload.byteLength,
       jobType: "file_ingest",
     });
-    jobId = queued.jobId;
-    inlineError = queued.inlineError;
+
+    return NextResponse.json({
+      id: docId,
+      status: queued.inlineError ? "pending" : queued.mode === "inline" ? "ready" : "queued",
+      job_id: queued.jobId,
+      inline_error: queued.inlineError,
+    });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Could not queue ingestion job.";
@@ -143,13 +122,4 @@ export async function POST(request: Request) {
       .eq("id", docId);
     return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  return NextResponse.json({
-    id: docId,
-    filename: displayName,
-    storage_path: storagePath,
-    status: inlineError ? "pending" : shouldInlineIngest(file.size) ? "ready" : "queued",
-    job_id: jobId,
-    inline_error: inlineError,
-  });
 }
