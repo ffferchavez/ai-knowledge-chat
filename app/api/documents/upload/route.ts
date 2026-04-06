@@ -15,7 +15,7 @@ import {
   queueDocumentIngestion,
   shouldInlineIngest,
 } from "@/lib/server/ingestion-jobs";
-import { checkRateLimit } from "@/lib/server/rate-limit";
+import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
@@ -33,15 +33,20 @@ export async function POST(request: Request) {
   if (!workspace) {
     return NextResponse.json({ error: "Workspace not found" }, { status: 403 });
   }
+  const limitConfig = { limit: 8 };
   const rate = await checkRateLimit({
     key: `upload:${user.id}`,
-    limit: 8,
+    limit: limitConfig.limit,
     windowMs: 60_000,
   });
   if (!rate.allowed) {
-    return NextResponse.json(
+    return applyRateLimitHeaders(
+      NextResponse.json(
       { error: "Upload rate limit exceeded. Try again in a minute." },
       { status: 429 },
+      ),
+      rate,
+      limitConfig,
     );
   }
 
@@ -166,12 +171,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 
-  return NextResponse.json({
-    id: docId,
-    filename: displayName,
-    storage_path: storagePath,
-    status: inlineError ? "pending" : shouldInlineIngest(file.size) ? "ready" : "queued",
-    job_id: jobId,
-    inline_error: inlineError,
-  });
+  return applyRateLimitHeaders(
+    NextResponse.json({
+      id: docId,
+      filename: displayName,
+      storage_path: storagePath,
+      status: inlineError
+        ? "pending"
+        : shouldInlineIngest(file.size)
+          ? "ready"
+          : "queued",
+      job_id: jobId,
+      inline_error: inlineError,
+    }),
+    rate,
+    limitConfig,
+  );
 }

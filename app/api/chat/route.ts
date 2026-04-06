@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getChatModel, getOpenAIClient } from "@/lib/server/openai";
-import { checkRateLimit } from "@/lib/server/rate-limit";
+import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
 import { retrieveRelevantChunks } from "@/lib/server/retrieval";
 import { logUsageEvent } from "@/lib/server/usage-events";
 import { createClient } from "@/lib/supabase/server";
@@ -49,15 +49,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Workspace not found" }, { status: 403 });
   }
 
+  const limitConfig = { limit: 20 };
   const rate = await checkRateLimit({
     key: `chat:${user.id}`,
-    limit: 20,
+    limit: limitConfig.limit,
     windowMs: 60_000,
   });
   if (!rate.allowed) {
-    return NextResponse.json(
+    return applyRateLimitHeaders(
+      NextResponse.json(
       { error: "Rate limit exceeded. Please wait a moment." },
       { status: 429 },
+      ),
+      rate,
+      limitConfig,
     );
   }
 
@@ -140,11 +145,15 @@ export async function POST(request: Request) {
       eventType: "chat_no_context",
       metadata: { session_id: sessionId },
     });
-    return NextResponse.json({
-      sessionId,
-      answer: noContextAnswer,
-      citations: [],
-    });
+    return applyRateLimitHeaders(
+      NextResponse.json({
+        sessionId,
+        answer: noContextAnswer,
+        citations: [],
+      }),
+      rate,
+      limitConfig,
+    );
   }
 
   const citations = sourceAnchors(chunks, 4);
@@ -210,9 +219,13 @@ export async function POST(request: Request) {
     metadata: { session_id: sessionId, citations: citations.length },
   });
 
-  return NextResponse.json({
-    sessionId,
-    answer,
-    citations,
-  });
+  return applyRateLimitHeaders(
+    NextResponse.json({
+      sessionId,
+      answer,
+      citations,
+    }),
+    rate,
+    limitConfig,
+  );
 }

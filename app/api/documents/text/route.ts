@@ -8,7 +8,7 @@ import {
   sanitizeDisplayFilename,
   storageObjectBasename,
 } from "@/lib/documents-policy";
-import { checkRateLimit } from "@/lib/server/rate-limit";
+import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
 import { queueDocumentIngestion } from "@/lib/server/ingestion-jobs";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
@@ -27,15 +27,20 @@ export async function POST(request: Request) {
   if (!workspace) {
     return NextResponse.json({ error: "Workspace not found" }, { status: 403 });
   }
+  const limitConfig = { limit: 20 };
   const rate = await checkRateLimit({
     key: `text-source:${user.id}`,
-    limit: 20,
+    limit: limitConfig.limit,
     windowMs: 60_000,
   });
   if (!rate.allowed) {
-    return NextResponse.json(
+    return applyRateLimitHeaders(
+      NextResponse.json(
       { error: "Too many text source requests. Try again shortly." },
       { status: 429 },
+      ),
+      rate,
+      limitConfig,
     );
   }
 
@@ -129,12 +134,20 @@ export async function POST(request: Request) {
       jobType: "file_ingest",
     });
 
-    return NextResponse.json({
-      id: docId,
-      status: queued.inlineError ? "pending" : queued.mode === "inline" ? "ready" : "queued",
-      job_id: queued.jobId,
-      inline_error: queued.inlineError,
-    });
+    return applyRateLimitHeaders(
+      NextResponse.json({
+        id: docId,
+        status: queued.inlineError
+          ? "pending"
+          : queued.mode === "inline"
+            ? "ready"
+            : "queued",
+        job_id: queued.jobId,
+        inline_error: queued.inlineError,
+      }),
+      rate,
+      limitConfig,
+    );
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Could not queue ingestion job.";

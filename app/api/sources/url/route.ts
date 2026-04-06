@@ -5,7 +5,7 @@ import {
   shouldInlineIngest,
   runIngestionJobById,
 } from "@/lib/server/ingestion-jobs";
-import { checkRateLimit } from "@/lib/server/rate-limit";
+import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
@@ -35,15 +35,20 @@ export async function POST(request: Request) {
   if (!workspace) {
     return NextResponse.json({ error: "Workspace not found" }, { status: 403 });
   }
+  const limitConfig = { limit: 12 };
   const rate = await checkRateLimit({
     key: `sources-url:${user.id}`,
-    limit: 12,
+    limit: limitConfig.limit,
     windowMs: 60_000,
   });
   if (!rate.allowed) {
-    return NextResponse.json(
+    return applyRateLimitHeaders(
+      NextResponse.json(
       { error: "URL ingest rate limit exceeded. Please wait a moment." },
       { status: 429 },
+      ),
+      rate,
+      limitConfig,
     );
   }
 
@@ -102,10 +107,14 @@ export async function POST(request: Request) {
     metadata: { source_id: source.id, url: seedUrl, inline_error: inlineError },
   });
 
-  return NextResponse.json({
-    source_id: source.id,
-    job_id: queued.id,
-    status: inlineError ? "queued" : "processing",
-    inline_error: inlineError,
-  });
+  return applyRateLimitHeaders(
+    NextResponse.json({
+      source_id: source.id,
+      job_id: queued.id,
+      status: inlineError ? "queued" : "processing",
+      inline_error: inlineError,
+    }),
+    rate,
+    limitConfig,
+  );
 }
