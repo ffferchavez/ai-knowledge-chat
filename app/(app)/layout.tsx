@@ -30,13 +30,21 @@ export default async function AppLayout({
     redirect("/login");
   }
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .maybeSingle();
+
   const meta = user.user_metadata as Record<string, unknown> | undefined;
-  const displayName =
+  const metaName =
     typeof meta?.full_name === "string"
       ? meta.full_name
       : typeof meta?.name === "string"
         ? meta.name
         : "";
+  const profileName = profile?.full_name?.trim() ?? "";
+  const displayName = profileName || metaName;
 
   return (
     <AppShellClient

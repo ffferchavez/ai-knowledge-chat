@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { signOutAction } from "@/app/(app)/actions";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 function HomeIcon() {
@@ -212,20 +213,22 @@ function SidebarUserFooter({
             {safe}
           </button>
           <div className="flex flex-col items-center gap-1">
-            <button
-              type="button"
+            <Link
+              href="/settings"
               className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950 hover:shadow-sm`}
               aria-label="Account settings"
             >
               <SettingsIcon />
-            </button>
-            <button
-              type="button"
-              className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
-              aria-label="Log out"
-            >
-              <LogOutIcon />
-            </button>
+            </Link>
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
+                aria-label="Log out"
+              >
+                <LogOutIcon />
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -247,20 +250,22 @@ function SidebarUserFooter({
                 {shortLabel}
               </p>
               <div className="mt-3 flex flex-col gap-0.5 border-t border-neutral-100 pt-3">
-                <button
-                  type="button"
+                <Link
+                  href="/settings"
                   className={`${navLinkFocus} inline-flex min-h-10 items-center gap-2 rounded-md px-1 text-[13px] font-medium text-neutral-600 transition-colors hover:text-neutral-950`}
                 >
                   <SettingsIcon />
                   Account
-                </button>
-                <button
-                  type="button"
-                  className={`${navLinkFocus} inline-flex min-h-10 items-center gap-2 px-1 text-[13px] font-medium tracking-wide text-neutral-500 transition-colors hover:text-neutral-950`}
-                >
-                  <LogOutIcon />
-                  Log out
-                </button>
+                </Link>
+                <form action={signOutAction}>
+                  <button
+                    type="submit"
+                    className={`${navLinkFocus} inline-flex min-h-10 w-full items-center gap-2 px-1 text-left text-[13px] font-medium tracking-wide text-neutral-500 transition-colors hover:text-neutral-950`}
+                  >
+                    <LogOutIcon />
+                    Log out
+                  </button>
+                </form>
               </div>
             </div>
           </div>
