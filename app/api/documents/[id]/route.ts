@@ -19,7 +19,7 @@ export async function DELETE(
 
   const { data: doc, error: fetchError } = await supabase
     .from("documents")
-    .select("id, storage_path")
+    .select("id, storage_path, source_id")
     .eq("id", id)
     .maybeSingle();
 
@@ -45,6 +45,9 @@ export async function DELETE(
 
   if (delError) {
     return NextResponse.json({ error: delError.message }, { status: 500 });
+  }
+  if (doc.source_id) {
+    await supabase.from("sources").delete().eq("id", doc.source_id);
   }
 
   return NextResponse.json({ ok: true });

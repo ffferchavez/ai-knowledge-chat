@@ -57,6 +57,25 @@ export async function POST(request: Request) {
   const docId = randomUUID();
   const storagePath = `${workspace.organization.id}/${workspace.knowledgeBase.id}/${docId}/${objectBase}`;
   const payload = Buffer.from(content, "utf8");
+  const { data: source, error: sourceError } = await supabase
+    .from("sources")
+    .insert({
+      organization_id: workspace.organization.id,
+      knowledge_base_id: workspace.knowledgeBase.id,
+      created_by: user.id,
+      source_type: "file",
+      title,
+      status: "pending",
+      metadata: { kind: "text_input" },
+    })
+    .select("id")
+    .maybeSingle<{ id: string }>();
+  if (sourceError || !source) {
+    return NextResponse.json(
+      { error: sourceError?.message ?? "Could not create source row." },
+      { status: 500 },
+    );
+  }
 
   if (payload.byteLength > MAX_DOCUMENT_BYTES) {
     return NextResponse.json(
@@ -71,12 +90,14 @@ export async function POST(request: Request) {
     organization_id: workspace.organization.id,
     uploaded_by: user.id,
     storage_path: storagePath,
+    source_id: source.id,
     filename,
     mime_type: "text/plain",
     size_bytes: payload.byteLength,
     status: "pending",
   });
   if (insertError) {
+    await supabase.from("sources").delete().eq("id", source.id);
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
@@ -88,6 +109,7 @@ export async function POST(request: Request) {
     });
   if (uploadError) {
     await supabase.from("documents").delete().eq("id", docId);
+    await supabase.from("sources").delete().eq("id", source.id);
     return NextResponse.json({ error: uploadError.message }, { status: 500 });
   }
   await logUsageEvent(supabase, {

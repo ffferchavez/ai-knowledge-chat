@@ -17,6 +17,7 @@ type DocumentRow = {
   filename: string;
   mime_type: string | null;
   storage_path: string;
+  source_id?: string | null;
 };
 
 export type DocumentIngestionResult = {
@@ -32,7 +33,7 @@ export async function ingestDocumentById(
   const { data: doc, error: fetchError } = await supabase
     .from("documents")
     .select(
-      "id, knowledge_base_id, organization_id, filename, mime_type, storage_path",
+      "id, knowledge_base_id, organization_id, filename, mime_type, storage_path, source_id",
     )
     .eq("id", documentId)
     .maybeSingle<DocumentRow>();
@@ -58,6 +59,12 @@ export async function ingestDocumentById(
     .from("documents")
     .update({ status: "processing", error_message: null })
     .eq("id", doc.id);
+  if (doc.source_id) {
+    await supabase
+      .from("sources")
+      .update({ status: "processing", error_message: null })
+      .eq("id", doc.source_id);
+  }
 
   try {
     const { data: downloaded, error: downloadError } = await supabase.storage
@@ -125,6 +132,16 @@ export async function ingestDocumentById(
     if (completeError) {
       throw new Error(completeError.message);
     }
+    if (doc.source_id) {
+      await supabase
+        .from("sources")
+        .update({
+          status: "ready",
+          error_message: null,
+          indexed_at: new Date().toISOString(),
+        })
+        .eq("id", doc.source_id);
+    }
 
     return {
       id: doc.id,
@@ -138,6 +155,12 @@ export async function ingestDocumentById(
       .from("documents")
       .update({ status: "failed", error_message: message })
       .eq("id", doc.id);
+    if (doc.source_id) {
+      await supabase
+        .from("sources")
+        .update({ status: "failed", error_message: message })
+        .eq("id", doc.source_id);
+    }
     throw new Error(message);
   }
 }
