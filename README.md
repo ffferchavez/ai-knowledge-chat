@@ -49,6 +49,7 @@ Apply migrations in order using the [Supabase CLI](https://supabase.com/docs/gui
 
 1. **`supabase/migrations/001_initial.sql`** — enables **pgvector**, core tables and **RLS**, private **`knowledge-files`** bucket, **`auth.users`** trigger (profile + default org + KB).
 2. **`supabase/migrations/002_sources_ingestion_jobs.sql`** (Phase 4b) — **`sources`**, **`source_pages`**, **`ingestion_jobs`**, links **file** rows through `documents.source_id`, and allows **chunks** from either a file (`document_id`) or a web page (`source_page_id`).
+3. **`supabase/migrations/003_match_document_chunks_fn.sql`** — pgvector similarity function used by chat retrieval (`match_document_chunks`), with fallback logic in app code if not present.
 
 See [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) §7 and **§7b** for Phase 4b routes, UI, and job-runner options.
 
@@ -67,6 +68,37 @@ Open [http://localhost:3000](http://localhost:3000).
 ```bash
 curl -s http://localhost:3000/api/health
 ```
+
+### 6. Worker and dev-admin routes
+
+- Queue worker endpoint:
+  - `POST /api/jobs/process?limit=5`
+  - requires `CRON_SECRET` via `x-cron-secret` or Bearer token.
+- Dev-only seed/reset endpoints:
+  - `POST /api/dev/seed`
+  - `POST /api/dev/reset`
+  - require `DEV_ADMIN_SECRET` via `x-dev-admin-secret` or Bearer token.
+
+Example:
+
+```bash
+curl -X POST "http://localhost:3000/api/dev/seed" \
+  -H "x-dev-admin-secret: $DEV_ADMIN_SECRET"
+```
+
+```bash
+curl -X POST "http://localhost:3000/api/dev/reset" \
+  -H "x-dev-admin-secret: $DEV_ADMIN_SECRET"
+```
+
+### 7. Production readiness checklist (MVP)
+
+- [ ] Migrations `001` + `002` + `003` applied to production Supabase.
+- [ ] `OPENAI_API_KEY`, Supabase keys, and `CRON_SECRET` configured in hosting env.
+- [ ] If multi-instance deploy: `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` configured.
+- [ ] Cron configured to call `/api/jobs/process` regularly.
+- [ ] Upload, text source, website source, and chat tested with non-admin user account.
+- [ ] Verify failed job recovery flow from `/knowledge` (Retry + Process queued jobs).
 
 ## Project documentation
 
