@@ -18,7 +18,7 @@ export default async function SavedPage() {
 
   const supabase = await createClient();
   const { data: sessions } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_sessions")
     .select("id, title, updated_at")
     .eq("knowledge_base_id", workspace.knowledgeBase.id)

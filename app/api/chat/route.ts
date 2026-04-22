@@ -116,7 +116,7 @@ export async function POST(request: Request) {
   let sessionId = body.sessionId;
   if (sessionId) {
     const { data: existing } = await supabase
-      .schema("intelligence")
+      .schema("public")
       .from("chat_sessions")
       .select("id")
       .eq("id", sessionId)
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
 
   if (!sessionId) {
     const { data: created, error: createError } = await supabase
-      .schema("intelligence")
+      .schema("public")
       .from("chat_sessions")
       .insert({
         user_id: user.id,
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
 
   if (rewindFromMessageId && sessionId) {
     const { data: pivot, error: pivotError } = await supabase
-      .schema("intelligence")
+      .schema("public")
       .from("chat_messages")
       .select("id, role, session_id")
       .eq("id", rewindFromMessageId)
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
     }
 
     const { data: ordered, error: listError } = await supabase
-      .schema("intelligence")
+      .schema("public")
       .from("chat_messages")
       .select("id")
       .eq("session_id", sessionId)
@@ -175,7 +175,7 @@ export async function POST(request: Request) {
     }
     const idsToRemove = ordered.slice(start).map((row) => row.id);
     const { error: deleteError } = await supabase
-      .schema("intelligence")
+      .schema("public")
       .from("chat_messages")
       .delete()
       .in("id", idsToRemove);
@@ -183,7 +183,7 @@ export async function POST(request: Request) {
   }
 
   const { error: insertUserError } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_messages")
     .insert({
       session_id: sessionId,
@@ -212,13 +212,13 @@ export async function POST(request: Request) {
   if (chunks.length === 0 && images.length === 0) {
     const noContextAnswer =
       "I could not find enough relevant context in your indexed sources to answer confidently. Add or reindex sources that mention this topic, then ask again.";
-    await supabase.schema("intelligence").from("chat_messages").insert({
+    await supabase.schema("public").from("chat_messages").insert({
       session_id: sessionId,
       role: "assistant",
       content: noContextAnswer,
       citations: [],
     });
-    await supabase.schema("intelligence").from("chat_sessions").update({ updated_at: new Date().toISOString() }).eq("id", sessionId);
+    await supabase.schema("public").from("chat_sessions").update({ updated_at: new Date().toISOString() }).eq("id", sessionId);
     await logUsageEvent(supabase, {
       organizationId: workspace.organization.id,
       userId: workspace.profile.id,
@@ -255,14 +255,14 @@ export async function POST(request: Request) {
       const message = error instanceof Error ? error.message : "OpenAI chat failed.";
       return NextResponse.json({ error: message }, { status: 500 });
     }
-    const { error: insertAssistantError } = await supabase.schema("intelligence").from("chat_messages").insert({
+    const { error: insertAssistantError } = await supabase.schema("public").from("chat_messages").insert({
       session_id: sessionId,
       role: "assistant",
       content: answer,
       citations: [],
     });
     if (insertAssistantError) return NextResponse.json({ error: insertAssistantError.message }, { status: 500 });
-    await supabase.schema("intelligence").from("chat_sessions").update({ updated_at: new Date().toISOString() }).eq("id", sessionId);
+    await supabase.schema("public").from("chat_sessions").update({ updated_at: new Date().toISOString() }).eq("id", sessionId);
     await logUsageEvent(supabase, {
       organizationId: workspace.organization.id,
       userId: workspace.profile.id,
@@ -307,7 +307,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 
-  const { error: insertAssistantError } = await supabase.schema("intelligence").from("chat_messages").insert({
+  const { error: insertAssistantError } = await supabase.schema("public").from("chat_messages").insert({
     session_id: sessionId,
     role: "assistant",
     content: answer,
@@ -315,7 +315,7 @@ export async function POST(request: Request) {
   });
   if (insertAssistantError) return NextResponse.json({ error: insertAssistantError.message }, { status: 500 });
 
-  await supabase.schema("intelligence").from("chat_sessions").update({ updated_at: new Date().toISOString() }).eq("id", sessionId);
+  await supabase.schema("public").from("chat_sessions").update({ updated_at: new Date().toISOString() }).eq("id", sessionId);
   await logUsageEvent(supabase, {
     organizationId: workspace.organization.id,
     userId: workspace.profile.id,

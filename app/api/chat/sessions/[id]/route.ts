@@ -22,7 +22,7 @@ export async function PATCH(
   }
 
   const { error } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_sessions")
     .update({ title: title.slice(0, 120), updated_at: new Date().toISOString() })
     .eq("id", id)
@@ -48,7 +48,7 @@ export async function DELETE(
   }
 
   const { error } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_sessions")
     .delete()
     .eq("id", id)

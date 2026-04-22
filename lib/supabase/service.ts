@@ -12,7 +12,7 @@ export function createServiceClient() {
   }
 
   return createClient(supabaseUrl, serviceRoleKey, {
-    db: { schema: "intelligence" },
+    db: { schema: "public" },
     auth: {
       persistSession: false,
       autoRefreshToken: false,

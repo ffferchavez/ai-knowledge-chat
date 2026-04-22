@@ -9,7 +9,7 @@ export function createClient() {
   const { supabaseUrl, supabaseKey } = getSupabasePublicEnv();
 
   browserClient = createBrowserClient(supabaseUrl, supabaseKey, {
-    db: { schema: "intelligence" },
+    db: { schema: "public" },
     cookieOptions: getSharedAuthCookieOptions(),
   });
 

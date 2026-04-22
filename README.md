@@ -46,20 +46,20 @@ Never expose `SUPABASE_SERVICE_ROLE_KEY` or `OPENAI_API_KEY` to the browser.
 
 ### 3. Database and storage
 
-For the consolidated portfolio setup, this app now expects:
+This repo’s SQL migrations keep **all** tables (identity, knowledge, chat, jobs) in **`public`**. The Supabase clients use **`db.schema: "public"`** so local dev matches those migrations.
 
-- shared identity/workspace tables in **`public`** (`profiles`, `organizations`, `organization_members`)
-- app-specific data in **`intelligence`** schema
 - private storage bucket **`knowledge-files`**
 
-If you use one shared Supabase project for multiple apps, ensure **API → Exposed schemas** includes:
+If you use a shared Supabase project with extra schemas, ensure **API → Exposed schemas** includes at least **`public`** (and any other schema you query from this app).
 
-- `public`
-- `intelligence`
-- `voices`
-- `media`
+Apply migrations with **`supabase db push`**, or paste each file into the Supabase **SQL** editor **in numeric order** (not only `004`):
 
-You can still use the local migration files in this repo for standalone setups, but for your shared project use the consolidated migrations already applied there.
+1. `supabase/migrations/001_initial.sql` — creates **`public`** tables (`profiles`, `chat_sessions`, `chat_messages`, `knowledge_bases`, storage bucket, RLS, signup trigger). **Safe to run again** if a past run stopped halfway (uses `IF NOT EXISTS` / `DROP POLICY IF EXISTS` / etc.).
+2. `supabase/migrations/002_sources_ingestion_jobs.sql`
+3. `supabase/migrations/003_match_document_chunks_fn.sql`
+4. `supabase/migrations/004_workspace_bootstrap_alignment.sql` — adds `chat_messages.attachments`, hardens **`handle_new_user`**, and **backfills** profile + default org + knowledge base for existing `auth.users` missing them (fixes **“Workspace unavailable”**).
+
+If you run **`004` first** on an empty database, Postgres will error because **`public.chat_messages` does not exist** until **`001`** has been applied.
 
 See [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) §7 and **§7b** for Phase 4b routes, UI, and job-runner options.
 

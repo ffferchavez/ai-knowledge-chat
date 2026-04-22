@@ -72,7 +72,7 @@ export async function getWorkspaceSnapshot(): Promise<WorkspaceSnapshot | null> 
     .eq("knowledge_base_id", kb.id);
 
   const { count: sessionCount } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_sessions")
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id)

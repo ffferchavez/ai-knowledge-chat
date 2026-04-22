@@ -8,7 +8,7 @@ export async function createClient() {
   const { supabaseUrl, supabaseKey } = getSupabasePublicEnv();
 
   return createServerClient(supabaseUrl, supabaseKey, {
-    db: { schema: "intelligence" },
+    db: { schema: "public" },
     cookieOptions: getSharedAuthCookieOptions(),
     cookies: {
       getAll() {

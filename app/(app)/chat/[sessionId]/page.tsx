@@ -18,7 +18,7 @@ export default async function ChatSessionPage({ params }: ChatSessionPageProps) 
 
   const supabase = await createClient();
   const { data: sessions } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_sessions")
     .select("id, title, updated_at")
     .eq("knowledge_base_id", workspace.knowledgeBase.id)
@@ -32,7 +32,7 @@ export default async function ChatSessionPage({ params }: ChatSessionPageProps) 
   }
 
   const { data: messages } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .from("chat_messages")
     .select("id, session_id, role, content, citations, created_at, attachments")
     .eq("session_id", sessionId)

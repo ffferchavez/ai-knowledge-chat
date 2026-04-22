@@ -86,7 +86,7 @@ export async function retrieveRelevantChunks(
 
   // Preferred path: pgvector function (add 003 migration). Fallback below.
   const { data: rpcData, error: rpcError } = await supabase
-    .schema("intelligence")
+    .schema("public")
     .rpc("match_document_chunks", {
       query_embedding: queryEmbedding,
       org_id: input.organizationId,
