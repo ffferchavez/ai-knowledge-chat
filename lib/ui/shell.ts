@@ -3,3 +3,6 @@ export const PAGE_INSET =
 
 export const MAIN_PAD =
   "pt-8 pb-[max(2.5rem,env(safe-area-inset-bottom))] sm:pt-10 md:pb-12 md:pt-12 lg:pb-16 lg:pt-16";
+
+export const CHAT_MAIN_PAD =
+  "pt-0 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:pb-[max(0.75rem,env(safe-area-inset-bottom))] md:pb-[max(1rem,env(safe-area-inset-bottom))]";

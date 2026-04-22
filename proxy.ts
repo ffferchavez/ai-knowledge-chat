@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabasePublicEnv } from "@/lib/supabase/env";
+import { getSharedAuthCookieOptions } from "@/lib/supabase/cookie-options";
 
 const protectedPrefixes = ["/dashboard", "/knowledge", "/chat", "/saved"];
 const authRoutes = ["/login", "/signup"];
@@ -15,9 +17,11 @@ function isAuthPath(pathname: string) {
 }
 
 export async function proxy(request: NextRequest) {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) {
+  let supabaseUrl: string;
+  let supabaseKey: string;
+  try {
+    ({ supabaseUrl, supabaseKey } = getSupabasePublicEnv());
+  } catch {
     return NextResponse.next({
       request: {
         headers: request.headers,
@@ -32,9 +36,10 @@ export async function proxy(request: NextRequest) {
   });
 
   const supabase = createServerClient(
-    url,
-    anonKey,
+    supabaseUrl,
+    supabaseKey,
     {
+      cookieOptions: getSharedAuthCookieOptions(),
       cookies: {
         getAll() {
           return request.cookies.getAll();

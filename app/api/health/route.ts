@@ -3,7 +3,10 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const checks = {
     supabaseUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL),
-    supabaseAnonKey: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+    supabasePublicKey: Boolean(
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    ),
     supabaseServiceRole: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
     openaiKey: Boolean(process.env.OPENAI_API_KEY),
     cronSecret: Boolean(process.env.CRON_SECRET),

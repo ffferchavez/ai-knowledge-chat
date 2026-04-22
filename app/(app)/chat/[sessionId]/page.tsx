@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 
 import { ChatClient } from "@/components/chat/chat-client";
+import { ChatPageShell } from "@/components/chat/chat-page-shell";
 import { createClient } from "@/lib/supabase/server";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
 
@@ -17,6 +18,7 @@ export default async function ChatSessionPage({ params }: ChatSessionPageProps) 
 
   const supabase = await createClient();
   const { data: sessions } = await supabase
+    .schema("intelligence")
     .from("chat_sessions")
     .select("id, title, updated_at")
     .eq("knowledge_base_id", workspace.knowledgeBase.id)
@@ -30,31 +32,20 @@ export default async function ChatSessionPage({ params }: ChatSessionPageProps) 
   }
 
   const { data: messages } = await supabase
+    .schema("intelligence")
     .from("chat_messages")
-    .select("id, session_id, role, content, citations, created_at")
+    .select("id, session_id, role, content, citations, created_at, attachments")
     .eq("session_id", sessionId)
     .order("created_at", { ascending: true });
 
   return (
-    <div className="flex w-full min-w-0 flex-col">
-      <header className="w-full border-b border-black pb-8 sm:pb-10">
-        <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-ui-muted-dim">
-          Chat
-        </p>
-        <h1 className="mt-3 text-2xl font-medium tracking-[-0.03em] text-ui-text sm:mt-4 sm:text-3xl md:text-4xl">
-          Grounded business Q&amp;A
-        </h1>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ui-muted sm:mt-6 sm:text-base">
-          Ask questions in natural language and get answers with source
-          citations.
-        </p>
-      </header>
+    <ChatPageShell>
       <ChatClient
         key={`chat-session-${sessionId}`}
         initialSessions={sessions ?? []}
         initialMessages={(messages ?? []) as Parameters<typeof ChatClient>[0]["initialMessages"]}
         initialSessionId={sessionId}
       />
-    </div>
+    </ChatPageShell>
   );
 }

@@ -17,6 +17,7 @@ export default async function SavedPage() {
 
   const supabase = await createClient();
   const { data: sessions } = await supabase
+    .schema("intelligence")
     .from("chat_sessions")
     .select("id, title, updated_at")
     .eq("knowledge_base_id", workspace.knowledgeBase.id)
@@ -45,7 +46,7 @@ export default async function SavedPage() {
             {sessions.map((session) => (
               <article
                 key={session.id}
-                className="border border-black/20 bg-white px-4 py-4"
+                className="rounded-none border border-black/20 bg-white px-4 py-4"
               >
                 <Link
                   href={`/chat/${session.id}`}

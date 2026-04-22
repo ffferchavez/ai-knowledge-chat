@@ -10,6 +10,7 @@ import {
 } from "@/lib/documents-policy";
 import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
 import { queueDocumentIngestion } from "@/lib/server/ingestion-jobs";
+import { resolveFolderForKnowledgeBase } from "@/lib/server/knowledge-folders";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
@@ -47,7 +48,22 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as {
     title?: string;
     content?: string;
+    folderId?: string | null;
   };
+  let folderId: string | null = null;
+  if (body.folderId) {
+    try {
+      folderId = await resolveFolderForKnowledgeBase(
+        supabase,
+        workspace.knowledgeBase.id,
+        workspace.organization.id,
+        body.folderId,
+      );
+    } catch {
+      return NextResponse.json({ error: "Invalid folder." }, { status: 400 });
+    }
+  }
+
   const title = String(body.title ?? "").trim() || "Text source";
   const content = String(body.content ?? "");
   if (!content.trim()) {
@@ -70,6 +86,7 @@ export async function POST(request: Request) {
       created_by: user.id,
       source_type: "file",
       title,
+      folder_id: folderId,
       status: "pending",
       metadata: { kind: "text_input" },
     })
@@ -96,6 +113,7 @@ export async function POST(request: Request) {
     uploaded_by: user.id,
     storage_path: storagePath,
     source_id: source.id,
+    folder_id: folderId,
     filename,
     mime_type: "text/plain",
     size_bytes: payload.byteLength,

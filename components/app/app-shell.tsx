@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useSyncExternalStore } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { AppSidebar } from "@/components/app/app-sidebar";
-import { MAIN_PAD, PAGE_INSET } from "@/lib/ui/shell";
+import { CHAT_MAIN_PAD, MAIN_PAD, PAGE_INSET } from "@/lib/ui/shell";
 
 function MenuIcon() {
   return (
@@ -40,12 +41,16 @@ function AppSidebarPlaceholder() {
 export function AppShell({
   displayName,
   initials,
+  portalDashboardHref,
   children,
 }: {
   displayName: string;
   initials: string;
+  portalDashboardHref: string;
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isChatRoute = pathname?.startsWith("/chat") ?? false;
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const shellReady = useSyncExternalStore(
     () => () => {},
@@ -53,9 +58,30 @@ export function AppShell({
     () => false,
   );
 
+  useEffect(() => {
+    if (!isChatRoute) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyOverscroll = body.style.overscrollBehavior;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.overscrollBehavior = "none";
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      body.style.overflow = prevBodyOverflow;
+      body.style.overscrollBehavior = prevBodyOverscroll;
+    };
+  }, [isChatRoute]);
+
   return (
     <div
-      className="flex min-h-[100dvh] min-h-screen flex-1 flex-col bg-[#fafafa]"
+      className={
+        isChatRoute
+          ? "flex h-[100dvh] max-h-[100dvh] min-h-0 w-full flex-col overflow-hidden bg-[#fafafa]"
+          : "flex min-h-[100dvh] min-h-screen flex-1 flex-col bg-[#fafafa]"
+      }
       suppressHydrationWarning
     >
       <header
@@ -71,7 +97,7 @@ export function AppShell({
                 <button
                   type="button"
                   onClick={() => setMobileNavOpen(true)}
-                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950 md:hidden"
+                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-none text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950 md:hidden"
                   aria-label="Open menu"
                 >
                   <MenuIcon />
@@ -94,10 +120,18 @@ export function AppShell({
               </>
             )}
           </div>
+          <Link
+            href={portalDashboardHref}
+            className="inline-flex min-h-9 shrink-0 items-center rounded-none border border-neutral-200/90 bg-white px-3 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-950"
+            title="Back to Helion Platform"
+            aria-label="Back to Helion Platform"
+          >
+            Platform
+          </Link>
         </div>
       </header>
 
-      <div className="flex min-h-0 min-w-0 flex-1">
+      <div className={`flex min-h-0 min-w-0 flex-1 ${isChatRoute ? "overflow-hidden" : ""}`}>
         {shellReady ? (
           <AppSidebar
             mobileOpen={mobileNavOpen}
@@ -109,7 +143,7 @@ export function AppShell({
           <AppSidebarPlaceholder />
         )}
         <main
-          className={`relative z-0 flex w-full min-w-0 flex-1 flex-col overflow-auto ${PAGE_INSET} ${MAIN_PAD}`}
+          className={`relative z-0 flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-x-hidden ${isChatRoute ? "overflow-y-hidden overscroll-none" : "overflow-y-auto"} ${PAGE_INSET} ${isChatRoute ? CHAT_MAIN_PAD : MAIN_PAD}`}
         >
           {children}
         </main>

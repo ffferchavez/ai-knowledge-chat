@@ -3,7 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function WebsiteSourceForm() {
+type Props = {
+  compact?: boolean;
+  defaultFolderId?: string | null;
+};
+
+export function WebsiteSourceForm({ compact, defaultFolderId }: Props) {
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
@@ -22,7 +27,11 @@ export function WebsiteSourceForm() {
       const res = await fetch("/api/sources/url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, title }),
+        body: JSON.stringify({
+          url,
+          title,
+          ...(defaultFolderId ? { folderId: defaultFolderId } : {}),
+        }),
       });
       const body = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) {
@@ -37,9 +46,17 @@ export function WebsiteSourceForm() {
     }
   }
 
+  const dense = compact === true;
+  const fieldClass =
+    "mt-2 w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50";
+
   return (
-    <form onSubmit={onSubmit} className="mt-4 space-y-4">
-      <div>
+    <form
+      onSubmit={onSubmit}
+      className={dense ? "flex h-full min-h-0 flex-1 flex-col gap-3" : "mt-4 space-y-4"}
+    >
+      <div className={dense ? "flex min-h-0 flex-1 flex-col gap-3" : "space-y-3"}>
+        <div>
         <label
           htmlFor="website-url"
           className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim"
@@ -52,7 +69,7 @@ export function WebsiteSourceForm() {
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com/docs/pricing"
           disabled={pending}
-          className="mt-2 w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50"
+          className={fieldClass}
         />
       </div>
       <div>
@@ -67,16 +84,19 @@ export function WebsiteSourceForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={pending}
-          className="mt-2 w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50"
+          className={fieldClass}
         />
       </div>
+      </div>
+      <div className={dense ? "mt-auto shrink-0" : ""}>
       <button
         type="submit"
         disabled={pending}
-        className="border border-black bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white disabled:opacity-50"
+        className={`border border-black bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white disabled:opacity-50 ${dense ? "w-full" : ""}`}
       >
         {pending ? "Adding…" : "Add website"}
       </button>
+      </div>
       {error ? (
         <p className="text-sm text-ui-warning" role="alert">
           {error}

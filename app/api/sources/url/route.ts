@@ -6,6 +6,7 @@ import {
   runIngestionJobById,
 } from "@/lib/server/ingestion-jobs";
 import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
+import { resolveFolderForKnowledgeBase } from "@/lib/server/knowledge-folders";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
@@ -55,7 +56,22 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as {
     url?: string;
     title?: string;
+    folderId?: string | null;
   };
+  let folderId: string | null = null;
+  if (body.folderId) {
+    try {
+      folderId = await resolveFolderForKnowledgeBase(
+        supabase,
+        workspace.knowledgeBase.id,
+        workspace.organization.id,
+        body.folderId,
+      );
+    } catch {
+      return NextResponse.json({ error: "Invalid folder." }, { status: 400 });
+    }
+  }
+
   const seedUrl = normalizeSeedUrl(String(body.url ?? ""));
   if (!seedUrl) {
     return NextResponse.json({ error: "Valid URL is required." }, { status: 400 });
@@ -70,6 +86,7 @@ export async function POST(request: Request) {
       created_by: user.id,
       source_type: "web",
       title,
+      folder_id: folderId,
       status: "pending",
       metadata: { seed_url: seedUrl },
     })

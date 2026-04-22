@@ -28,6 +28,7 @@ export async function updateProfileAction(
   }
 
   const { error } = await supabase
+    .schema("public")
     .from("profiles")
     .update({ full_name: fullName.length > 0 ? fullName : null })
     .eq("id", user.id);
@@ -60,6 +61,7 @@ export async function updateOrganizationAction(
 
   const supabase = await createClient();
   const { error } = await supabase
+    .schema("public")
     .from("organizations")
     .update({ name })
     .eq("id", snap.organization.id);

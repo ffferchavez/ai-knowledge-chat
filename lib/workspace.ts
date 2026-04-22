@@ -24,6 +24,7 @@ export async function getWorkspaceSnapshot(): Promise<WorkspaceSnapshot | null> 
   if (!user) return null;
 
   const { data: profile, error: profileError } = await supabase
+    .schema("public")
     .from("profiles")
     .select("id, email, full_name")
     .eq("id", user.id)
@@ -32,6 +33,7 @@ export async function getWorkspaceSnapshot(): Promise<WorkspaceSnapshot | null> 
   if (profileError || !profile) return null;
 
   const { data: membership, error: membershipError } = await supabase
+    .schema("public")
     .from("organization_members")
     .select("organization_id, role")
     .eq("user_id", user.id)
@@ -44,6 +46,7 @@ export async function getWorkspaceSnapshot(): Promise<WorkspaceSnapshot | null> 
   if (role !== "owner" && role !== "admin" && role !== "member") return null;
 
   const { data: org, error: orgError } = await supabase
+    .schema("public")
     .from("organizations")
     .select("id, name, slug")
     .eq("id", membership.organization_id)

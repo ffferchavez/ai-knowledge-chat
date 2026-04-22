@@ -1,9 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
 import { getWorkspaceSnapshot } from "@/lib/workspace";
 
-export const metadata = {
-  title: "Home — Helion Intelligence",
+export const metadata: Metadata = {
+  title: "Dashboard — Helion Intelligence",
 };
 
 function greetingLine(fullName: string | null, email: string) {
@@ -19,7 +20,7 @@ export default async function DashboardPage() {
   if (!snap) {
     return (
       <div className="flex w-full min-w-0 flex-col">
-        <header className="w-full border-b border-black pb-8 sm:pb-10">
+        <header className="w-full border-b border-helion-ink pb-8 sm:pb-10">
           <h1 className="text-2xl font-medium tracking-[-0.03em] text-ui-text">
             Workspace unavailable
           </h1>
@@ -56,7 +57,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex w-full min-w-0 flex-col">
-      <header className="w-full border-b border-black pb-8 sm:pb-10">
+      <header className="w-full border-b border-helion-ink pb-8 sm:pb-10">
         <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-ui-muted-dim">
           Workspace
         </p>
@@ -69,7 +70,7 @@ export default async function DashboardPage() {
           {snap.knowledgeBase.name}. Index sources and run grounded Q&amp;A from
           one place.
         </p>
-        <div className="mt-8 grid w-full grid-cols-1 gap-px bg-black sm:mt-10 sm:grid-cols-2">
+        <div className="mt-8 grid w-full grid-cols-1 gap-px bg-helion-ink sm:mt-10 sm:grid-cols-2">
           <div className="min-h-[100px] bg-ui-bg px-4 py-4 sm:px-5 sm:py-5">
             <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">
               Files
@@ -89,12 +90,12 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <nav className="mt-0 w-full border-t border-black" aria-label="Workspace">
+      <nav className="mt-0 w-full border-t border-helion-ink" aria-label="Workspace">
         {rows.map((row) => (
           <Link
             key={row.title}
             href={row.href}
-            className="group flex w-full min-w-0 items-start justify-between gap-4 border-b border-black py-8 transition-colors hover:bg-neutral-50 sm:gap-8 sm:py-10"
+            className="group flex w-full min-w-0 items-start justify-between gap-4 border-b border-helion-ink py-8 transition-colors hover:bg-neutral-50 sm:gap-8 sm:py-10"
           >
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">

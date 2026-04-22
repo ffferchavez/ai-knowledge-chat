@@ -114,7 +114,7 @@ const items = [
 ] as const;
 
 const navLinkFocus =
-  "outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 focus-visible:ring-offset-2 focus-visible:ring-offset-[#fafafa]";
+  "outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 function isActive(pathname: string, href: string) {
   if (href === "/dashboard") {
@@ -153,7 +153,7 @@ function SidebarNavLinks({
               title={iconOnly ? label : undefined}
               className={[
                 navLinkFocus,
-                "group relative flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium tracking-wide transition-[background-color,color,box-shadow] duration-200",
+                "group relative flex min-h-[44px] items-center gap-3 rounded-none px-3 py-2.5 text-[13px] font-medium tracking-wide transition-[background-color,color,box-shadow] duration-200",
                 iconOnly ? "justify-center px-2" : "",
                 active
                   ? "bg-white text-neutral-950 shadow-sm ring-1 ring-neutral-200/90"
@@ -162,7 +162,7 @@ function SidebarNavLinks({
             >
               {active && (
                 <span
-                  className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-full bg-[#d4c800]"
+                  className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-none bg-[#d4c800]"
                   aria-hidden
                 />
               )}
@@ -206,7 +206,7 @@ function SidebarUserFooter({
         <div className="flex flex-col items-center gap-2 px-2 py-3">
           <button
             type="button"
-            className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-full bg-neutral-200 text-[11px] font-semibold text-neutral-800 ring-1 ring-neutral-300/80`}
+            className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none bg-neutral-200 text-[11px] font-semibold text-neutral-800 ring-1 ring-neutral-300/80`}
             title={shortLabel}
             aria-label="Account"
           >
@@ -215,7 +215,7 @@ function SidebarUserFooter({
           <div className="flex flex-col items-center gap-1">
             <Link
               href="/settings"
-              className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950 hover:shadow-sm`}
+              className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950 hover:shadow-sm`}
               aria-label="Account settings"
             >
               <SettingsIcon />
@@ -223,7 +223,7 @@ function SidebarUserFooter({
             <form action={signOutAction}>
               <button
                 type="submit"
-                className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
+                className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
                 aria-label="Log out"
               >
                 <LogOutIcon />
@@ -240,9 +240,9 @@ function SidebarUserFooter({
       className={`shrink-0 border-t border-neutral-200/80 bg-[#fafafa]/95 ${bottomSafe}`}
     >
       <div className="p-3">
-        <div className="rounded-xl border border-neutral-200/80 bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="rounded-none border border-neutral-200/80 bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
           <div className="flex gap-3">
-            <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-[11px] font-semibold tracking-tight text-neutral-800 ring-1 ring-neutral-300/80">
+            <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-none bg-neutral-200 text-[11px] font-semibold tracking-tight text-neutral-800 ring-1 ring-neutral-300/80">
               {safe}
             </div>
             <div className="min-w-0 flex-1">
@@ -252,7 +252,7 @@ function SidebarUserFooter({
               <div className="mt-3 flex flex-col gap-0.5 border-t border-neutral-100 pt-3">
                 <Link
                   href="/settings"
-                  className={`${navLinkFocus} inline-flex min-h-10 items-center gap-2 rounded-md px-1 text-[13px] font-medium text-neutral-600 transition-colors hover:text-neutral-950`}
+                  className={`${navLinkFocus} inline-flex min-h-10 items-center gap-2 rounded-none px-1 text-[13px] font-medium text-neutral-600 transition-colors hover:text-neutral-950`}
                 >
                   <SettingsIcon />
                   Account
@@ -309,7 +309,7 @@ export function AppSidebar({
   }, [mobileOpen, isDesktop]);
 
   return (
-    <>
+    <div className="contents" suppressHydrationWarning>
       <aside
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
@@ -334,7 +334,7 @@ export function AppSidebar({
       </aside>
 
       <div
-        className={`fixed inset-0 z-40 bg-neutral-950/20 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-helion-ink/20 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
           mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
         aria-hidden={!mobileOpen}
@@ -358,7 +358,7 @@ export function AppSidebar({
           <button
             type="button"
             onClick={() => onMobileOpenChange(false)}
-            className={`${navLinkFocus} inline-flex size-11 shrink-0 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
+            className={`${navLinkFocus} inline-flex size-11 shrink-0 items-center justify-center rounded-none text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
             aria-label="Close menu"
           >
             <CloseIcon />
@@ -379,6 +379,6 @@ export function AppSidebar({
           mobile
         />
       </aside>
-    </>
+    </div>
   );
 }

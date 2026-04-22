@@ -48,13 +48,13 @@ export function ProfileSettingsForm({
           name="fullName"
           defaultValue={defaultFullName}
           autoComplete="name"
-          className="mt-2 w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15"
+          className="mt-2 w-full rounded-none border border-helion-ink bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-helion-ink/15"
         />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="border border-black bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-ui-ink-deep disabled:opacity-50"
+        className="rounded-none border border-helion-ink bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-ui-ink-deep disabled:opacity-50"
       >
         {pending ? "Saving…" : "Save profile"}
       </button>
@@ -87,13 +87,13 @@ export function OrganizationSettingsForm({
           name="orgName"
           defaultValue={defaultOrgName}
           autoComplete="organization"
-          className="mt-2 w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15"
+          className="mt-2 w-full rounded-none border border-helion-ink bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-helion-ink/15"
         />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="border border-black bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-ui-ink-deep disabled:opacity-50"
+        className="rounded-none border border-helion-ink bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-ui-ink-deep disabled:opacity-50"
       >
         {pending ? "Saving…" : "Save workspace"}
       </button>

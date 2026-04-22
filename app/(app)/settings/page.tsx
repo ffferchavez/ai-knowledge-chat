@@ -22,7 +22,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="flex w-full min-w-0 flex-col">
-      <header className="w-full border-b border-black pb-8 sm:pb-10">
+      <header className="w-full border-b border-helion-ink pb-8 sm:pb-10">
         <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-ui-muted-dim">
           Settings
         </p>
@@ -34,7 +34,7 @@ export default async function SettingsPage() {
         </p>
       </header>
 
-      <section className="mt-0 w-full border-t border-black py-8 sm:py-10">
+      <section className="mt-0 w-full border-t border-helion-ink py-8 sm:py-10">
         <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">
           Profile
         </p>
@@ -48,7 +48,7 @@ export default async function SettingsPage() {
       </section>
 
       {canRenameWorkspace ? (
-        <section className="w-full border-t border-black py-8 sm:py-10">
+        <section className="w-full border-t border-helion-ink py-8 sm:py-10">
           <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">
             Workspace
           </p>

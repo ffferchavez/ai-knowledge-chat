@@ -36,7 +36,8 @@ cp .env.example .env.local
 | Variable | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public anon key (RLS applies) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY` | Preferred public key (`sb_publishable_...`) |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Legacy public anon key fallback |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only; ingestion and privileged jobs |
 | `OPENAI_API_KEY` | Server-only; embeddings + chat |
 | `NEXT_PUBLIC_APP_URL` | Canonical app URL (OAuth redirects, links) |
@@ -45,11 +46,20 @@ Never expose `SUPABASE_SERVICE_ROLE_KEY` or `OPENAI_API_KEY` to the browser.
 
 ### 3. Database and storage
 
-Apply migrations in order using the [Supabase CLI](https://supabase.com/docs/guides/cli) or paste each file into the SQL Editor in the Supabase dashboard:
+For the consolidated portfolio setup, this app now expects:
 
-1. **`supabase/migrations/001_initial.sql`** — enables **pgvector**, core tables and **RLS**, private **`knowledge-files`** bucket, **`auth.users`** trigger (profile + default org + KB).
-2. **`supabase/migrations/002_sources_ingestion_jobs.sql`** (Phase 4b) — **`sources`**, **`source_pages`**, **`ingestion_jobs`**, links **file** rows through `documents.source_id`, and allows **chunks** from either a file (`document_id`) or a web page (`source_page_id`).
-3. **`supabase/migrations/003_match_document_chunks_fn.sql`** — pgvector similarity function used by chat retrieval (`match_document_chunks`), with fallback logic in app code if not present.
+- shared identity/workspace tables in **`public`** (`profiles`, `organizations`, `organization_members`)
+- app-specific data in **`intelligence`** schema
+- private storage bucket **`knowledge-files`**
+
+If you use one shared Supabase project for multiple apps, ensure **API → Exposed schemas** includes:
+
+- `public`
+- `intelligence`
+- `voices`
+- `media`
+
+You can still use the local migration files in this repo for standalone setups, but for your shared project use the consolidated migrations already applied there.
 
 See [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) §7 and **§7b** for Phase 4b routes, UI, and job-runner options.
 

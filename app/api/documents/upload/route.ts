@@ -15,6 +15,7 @@ import {
   queueDocumentIngestion,
   shouldInlineIngest,
 } from "@/lib/server/ingestion-jobs";
+import { resolveFolderForKnowledgeBase } from "@/lib/server/knowledge-folders";
 import { applyRateLimitHeaders, checkRateLimit } from "@/lib/server/rate-limit";
 import { createClient } from "@/lib/supabase/server";
 import { logUsageEvent } from "@/lib/server/usage-events";
@@ -58,6 +59,23 @@ export async function POST(request: Request) {
   }
 
   const file = formData.get("file");
+  const rawFolderId = formData.get("folderId");
+  const folderIdValue =
+    typeof rawFolderId === "string" ? rawFolderId : null;
+  let folderId: string | null = null;
+  if (folderIdValue) {
+    try {
+      folderId = await resolveFolderForKnowledgeBase(
+        supabase,
+        workspace.knowledgeBase.id,
+        workspace.organization.id,
+        folderIdValue,
+      );
+    } catch {
+      return NextResponse.json({ error: "Invalid folder." }, { status: 400 });
+    }
+  }
+
   if (!(file instanceof File) || file.size === 0) {
     return NextResponse.json(
       { error: "A non-empty file is required." },
@@ -97,6 +115,7 @@ export async function POST(request: Request) {
       created_by: user.id,
       source_type: "file",
       title: displayName,
+      folder_id: folderId,
       status: "pending",
       metadata: { kind: "file_upload" },
     })
@@ -116,6 +135,7 @@ export async function POST(request: Request) {
     uploaded_by: user.id,
     storage_path: storagePath,
     source_id: source.id,
+    folder_id: folderId,
     filename: displayName,
     mime_type: mime,
     size_bytes: file.size,
