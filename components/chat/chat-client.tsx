@@ -301,7 +301,7 @@ function readFileAsBase64Part(file: File): Promise<ImageAttachment> {
     reader.onload = () => {
       const result = reader.result;
       if (typeof result !== "string") return reject(new Error("read"));
-      const m = /^data:([^;]+);base64,(.+)$/s.exec(result);
+      const m = /^data:([^;]+);base64,([\s\S]+)$/.exec(result);
       if (!m) return reject(new Error("parse"));
       resolve({ mime: m[1], data: m[2] });
     };

@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { createClient } from "@/lib/supabase/server";
 
 import { splitIntoChunks } from "@/lib/server/chunking";
 import { fetchWebPage } from "@/lib/server/crawl";
@@ -12,7 +12,7 @@ type SourceRow = {
 };
 
 export async function ingestWebSourceById(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   sourceId: string,
 ) {
   const { data: source, error: sourceError } = await supabase

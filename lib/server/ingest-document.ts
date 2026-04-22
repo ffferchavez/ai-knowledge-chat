@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { createClient } from "@/lib/supabase/server";
 
 import {
   ALLOWED_DOCUMENT_MIME_TYPES,
@@ -27,7 +27,7 @@ export type DocumentIngestionResult = {
 };
 
 export async function ingestDocumentById(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   documentId: string,
 ): Promise<DocumentIngestionResult> {
   const { data: doc, error: fetchError } = await supabase

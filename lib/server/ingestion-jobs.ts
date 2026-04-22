@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { createClient } from "@/lib/supabase/server";
 
 import { ingestDocumentById } from "@/lib/server/ingest-document";
 import { ingestWebSourceById } from "@/lib/server/ingest-web";
@@ -32,7 +32,7 @@ export function shouldInlineIngest(sizeBytes: number) {
 }
 
 export async function enqueueIngestionJob(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   input: {
     organizationId: string;
     knowledgeBaseId: string;
@@ -68,7 +68,7 @@ export async function enqueueIngestionJob(
 }
 
 export async function queueDocumentIngestion(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   input: {
     organizationId: string;
     knowledgeBaseId: string;
@@ -117,7 +117,7 @@ function readSourceId(job: JobRow): string | null {
 }
 
 export async function runIngestionJobById(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   jobId: string,
 ): Promise<{
   jobId: string;
@@ -218,7 +218,7 @@ export async function runIngestionJobById(
 }
 
 export async function claimNextQueuedIngestionJob(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
 ): Promise<string | null> {
   const { data: queued, error: fetchError } = await supabase
     .from("ingestion_jobs")

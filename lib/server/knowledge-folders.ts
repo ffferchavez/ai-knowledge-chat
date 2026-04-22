@@ -52,7 +52,7 @@ export function folderPathLabel(
 
   while (cur && byId.has(cur) && !guard.has(cur)) {
     guard.add(cur);
-    const node = byId.get(cur)!;
+    const node: SourceFolderRow = byId.get(cur)!;
     parts.unshift(node.name.trim());
     cur = node.parent_folder_id ?? undefined;
   }
