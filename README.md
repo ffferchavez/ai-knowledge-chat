@@ -58,6 +58,7 @@ Apply migrations with **`supabase db push`**, or paste each file into the Supaba
 2. `supabase/migrations/002_sources_ingestion_jobs.sql`
 3. `supabase/migrations/003_match_document_chunks_fn.sql`
 4. `supabase/migrations/004_workspace_bootstrap_alignment.sql` — adds `chat_messages.attachments`, hardens **`handle_new_user`**, and **backfills** profile + default org + knowledge base for existing `auth.users` missing them (fixes **“Workspace unavailable”**).
+5. `supabase/migrations/005_source_folders.sql` — adds **`source_folders`**, **`documents.folder_id`**, and **`sources.folder_id`** for the Sources page and folder APIs (fixes errors like **`column documents.folder_id does not exist`**).
 
 If you run **`004` first** on an empty database, Postgres will error because **`public.chat_messages` does not exist** until **`001`** has been applied.
 
