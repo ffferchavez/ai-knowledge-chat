@@ -47,8 +47,7 @@ export function WebsiteSourceForm({ compact, defaultFolderId }: Props) {
   }
 
   const dense = compact === true;
-  const fieldClass =
-    "mt-2 w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50";
+  const fieldClass = "ui-input mt-2 text-sm disabled:opacity-50";
 
   return (
     <form
@@ -92,7 +91,7 @@ export function WebsiteSourceForm({ compact, defaultFolderId }: Props) {
       <button
         type="submit"
         disabled={pending}
-        className={`border border-black bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white disabled:opacity-50 ${dense ? "w-full" : ""}`}
+        className={`ui-btn ui-btn-primary min-h-0 rounded-none px-4 py-2 text-xs uppercase tracking-[0.2em] ${dense ? "w-full" : ""}`}
       >
         {pending ? "Adding…" : "Add website"}
       </button>

@@ -70,16 +70,16 @@ export function EditTextSourceButton({
         type="button"
         onClick={openEditor}
         disabled={pending || loading}
-        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-text hover:underline disabled:opacity-50"
+        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-ink-deep hover:underline disabled:opacity-50"
       >
         {loading ? "Loading…" : open ? "Close" : "View / Edit"}
       </button>
       {open ? (
-        <div className="w-full space-y-2 border border-black/20 bg-white p-3">
+        <div className="glass-muted w-full space-y-2 p-3">
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-black px-2 py-1.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15"
+            className="ui-input w-full px-2 py-1.5 text-sm"
             placeholder="Title"
             disabled={pending}
           />
@@ -87,14 +87,14 @@ export function EditTextSourceButton({
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={6}
-            className="w-full resize-y border border-black px-2 py-1.5 text-sm outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15"
+            className="ui-input w-full resize-y px-2 py-1.5 text-sm"
             disabled={pending}
           />
           <button
             type="button"
             onClick={save}
             disabled={pending}
-            className="border border-black bg-ui-text px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.18em] text-white disabled:opacity-50"
+            className="ui-btn ui-btn-primary min-h-0 rounded-none px-3 py-1.5 text-[11px] uppercase tracking-[0.18em]"
           >
             {pending ? "Saving…" : "Save & reindex"}
           </button>

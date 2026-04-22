@@ -41,7 +41,7 @@ export function DeleteDocumentButton({ documentId }: { documentId: string }) {
         type="button"
         onClick={onClick}
         disabled={pending}
-        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-text hover:underline disabled:opacity-50"
+        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-ink-deep hover:underline disabled:opacity-50"
       >
         {pending ? "Removing…" : "Remove"}
       </button>

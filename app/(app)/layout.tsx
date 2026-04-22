@@ -3,11 +3,6 @@ import { redirect } from "next/navigation";
 import { AppShellClient } from "@/components/app/app-shell-client";
 import { createClient } from "@/lib/supabase/server";
 
-function portalDashboardHref() {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  return `${base.replace(/\/$/, "")}/dashboard`;
-}
-
 function userInitials(name: string, email: string) {
   const cleanName = name.trim();
   if (cleanName) {
@@ -56,7 +51,6 @@ export default async function AppLayout({
     <AppShellClient
       displayName={displayName || user.email || "Account"}
       initials={userInitials(displayName, user.email || "")}
-      portalDashboardHref={portalDashboardHref()}
     >
       {children}
     </AppShellClient>

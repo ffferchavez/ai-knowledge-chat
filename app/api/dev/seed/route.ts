@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   const sourceTitle = "dev-seed-knowledge";
   const content =
-    "Helion Ops training can be delivered online or in person. Scheduling and pricing are confirmed after initial consultation. Typical sessions are 60-90 minutes and include follow-up Q&A.";
+    "Sample knowledge for the demo: Acme Co. makes tools for organizing team documents. Support replies within one business day. Annual plans renew automatically unless you cancel 30 days before renewal. Security reviews and privacy questions go through the in-app help form.";
 
   const sourceId = randomUUID();
   const documentId = randomUUID();

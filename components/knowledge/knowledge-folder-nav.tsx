@@ -9,8 +9,8 @@ function navLinkClass(active: boolean) {
   return [
     "block px-2 py-1.5 text-[13px] transition-colors",
     active
-      ? "bg-neutral-100 font-medium text-ui-text"
-      : "text-ui-muted hover:bg-neutral-50 hover:text-ui-text",
+      ? "bg-white/10 font-medium text-ui-ink-deep"
+      : "text-ui-muted hover:bg-white/8 hover:text-ui-ink-deep",
   ].join(" ");
 }
 
@@ -24,7 +24,7 @@ export function KnowledgeFolderNav({
   const sorted = [...folders].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <nav className="border border-black/20 bg-white p-4" aria-label="Folder filter">
+    <nav className="glass-muted p-4" aria-label="Folder filter">
       <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">
         Browse by folder
       </p>

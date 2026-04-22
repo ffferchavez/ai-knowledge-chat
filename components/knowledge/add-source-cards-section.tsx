@@ -83,23 +83,23 @@ function SourceCard({
   return (
     <article
       className={[
-        "flex h-full min-h-[26rem] flex-col border bg-white p-5 sm:p-6",
+        "glass-elevated flex h-full min-h-[26rem] flex-col p-5 sm:p-6",
         muted
-          ? "border-dashed border-black/20 bg-neutral-50/40"
-          : "border-black/10 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03]",
+          ? "border-dashed border-ui-line/70 bg-ui-surface/70"
+          : "ring-1 ring-ui-line/40",
       ].join(" ")}
     >
       <div className="flex gap-3">
-        <div className="flex size-11 shrink-0 items-center justify-center bg-[#f4f4f0] text-neutral-700 ring-1 ring-black/10">
+        <div className="flex size-11 shrink-0 items-center justify-center bg-ui-surface text-ui-muted ring-1 ring-ui-line">
           {icon}
         </div>
         <div className="min-w-0 flex-1 pt-0.5">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-[15px] font-semibold leading-tight tracking-[-0.02em] text-ui-text">
+            <h3 className="text-[15px] font-semibold leading-tight tracking-[-0.02em] text-ui-ink-deep">
               {title}
             </h3>
             {badge ? (
-              <span className="bg-neutral-200/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-600">
+              <span className="bg-ui-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-ui-muted">
                 {badge}
               </span>
             ) : null}
@@ -107,7 +107,7 @@ function SourceCard({
           <p className="mt-1.5 text-[13px] leading-snug text-ui-muted">{description}</p>
         </div>
       </div>
-      <div className="mt-5 flex min-h-0 flex-1 flex-col border-t border-black/10 pt-5">
+      <div className="mt-5 flex min-h-0 flex-1 flex-col border-t border-ui-line-soft pt-5">
         <div className="flex min-h-0 flex-1 flex-col">{children}</div>
       </div>
     </article>
@@ -122,22 +122,22 @@ export function AddSourceCardsSection({
   defaultFolderId?: string | null;
 }) {
   return (
-    <section className="w-full border-t border-black py-8 sm:py-10">
+    <section className="glass-panel mt-4 w-full p-6 sm:p-8">
       <div className="max-w-[1600px]">
-        <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">
+        <p className="ui-kicker">
           Add sources
         </p>
-        <h2 className="mt-2 text-lg font-medium tracking-[-0.02em] text-ui-text sm:text-xl">
+        <h2 className="mt-2 text-lg font-medium tracking-[-0.02em] text-ui-ink-deep sm:text-xl">
           Bring content into this knowledge base
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ui-muted">
-          Pick a channel. Uploads and URL crawls enqueue ingestion automatically; run the queue
-          from the section above if something stays pending.
+          Choose how to add content. Most imports finish in the background—if something
+          looks stuck, check the Imports section above.
         </p>
         {defaultFolderId ? (
           <p className="mt-2 text-xs text-ui-muted">
             New items below are added to the{" "}
-            <span className="font-medium text-ui-text">currently selected folder</span>.
+            <span className="font-medium text-ui-ink-deep">currently selected folder</span>.
           </p>
         ) : null}
 
@@ -145,7 +145,7 @@ export function AddSourceCardsSection({
           <SourceCard
             icon={<FileIcon />}
             title="File"
-            description="PDF, Word, or plain text for policies, SOPs, and long-form docs."
+            description="PDF, Word, or plain text—handbooks, FAQs, product notes, and more."
           >
             {documentsError ? (
               <p className="text-sm text-ui-warning" role="alert">
@@ -159,7 +159,7 @@ export function AddSourceCardsSection({
           <SourceCard
             icon={<TextIcon />}
             title="Text"
-            description="Paste notes, snippets, or lightweight policies without a file."
+            description="Paste text directly when you don’t have a file handy."
           >
             {documentsError ? null : (
               <TextSourceForm compact defaultFolderId={defaultFolderId} />
@@ -169,7 +169,7 @@ export function AddSourceCardsSection({
           <SourceCard
             icon={<WebIcon />}
             title="Website"
-            description="Index a public page; we fetch once and chunk for search."
+            description="Add a public web page—ideal for help centers or marketing pages."
           >
             {documentsError ? null : (
               <WebsiteSourceForm compact defaultFolderId={defaultFolderId} />
@@ -178,8 +178,8 @@ export function AddSourceCardsSection({
 
           <SourceCard
             icon={<ErpIcon />}
-            title="Helion Ops"
-            description="Connect operations data into the same retrieval layer."
+            title="Integrations"
+            description="Connect other tools so answers can use more of your data."
             badge="Soon"
             muted
           >

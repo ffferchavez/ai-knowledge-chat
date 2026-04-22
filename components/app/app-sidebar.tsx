@@ -114,7 +114,7 @@ const items = [
 ] as const;
 
 const navLinkFocus =
-  "outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "outline-none focus-visible:ring-2 focus-visible:ring-ui-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent";
 
 function isActive(pathname: string, href: string) {
   if (href === "/dashboard") {
@@ -138,7 +138,7 @@ function SidebarNavLinks({
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       {!iconOnly && (
-        <p className="px-3 pb-2 pt-1 text-[10px] font-medium uppercase tracking-[0.22em] text-neutral-400">
+        <p className="px-3 pb-2 pt-1 text-[10px] font-medium uppercase tracking-[0.22em] text-ui-muted-dim">
           Workspace
         </p>
       )}
@@ -156,13 +156,13 @@ function SidebarNavLinks({
                 "group relative flex min-h-[44px] items-center gap-3 rounded-none px-3 py-2.5 text-[13px] font-medium tracking-wide transition-[background-color,color,box-shadow] duration-200",
                 iconOnly ? "justify-center px-2" : "",
                 active
-                  ? "bg-white text-neutral-950 shadow-sm ring-1 ring-neutral-200/90"
-                  : "text-neutral-600 hover:bg-white/70 hover:text-neutral-950",
+                  ? "glass-muted text-ui-ink-deep shadow-sm ring-1 ring-ui-glass-ring"
+                  : "text-ui-muted hover:bg-white/8 hover:text-ui-ink-deep",
               ].join(" ")}
             >
               {active && (
                 <span
-                  className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-none bg-[#d4c800]"
+                  className="absolute left-0 top-1/2 h-6 w-0.5 -translate-y-1/2 rounded-none bg-ui-accent"
                   aria-hidden
                 />
               )}
@@ -201,12 +201,12 @@ function SidebarUserFooter({
   if (iconOnly) {
     return (
       <div
-        className={`shrink-0 border-t border-neutral-200/80 bg-[#fafafa]/95 ${bottomSafe}`}
+        className={`shrink-0 border-t border-ui-line/70 bg-ui-glass-panel ${bottomSafe}`}
       >
         <div className="flex flex-col items-center gap-2 px-2 py-3">
           <button
             type="button"
-            className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none bg-neutral-200 text-[11px] font-semibold text-neutral-800 ring-1 ring-neutral-300/80`}
+            className={`${navLinkFocus} glass-muted inline-flex size-10 items-center justify-center rounded-none text-[11px] font-semibold text-ui-text ring-1 ring-ui-line`}
             title={shortLabel}
             aria-label="Account"
           >
@@ -215,7 +215,7 @@ function SidebarUserFooter({
           <div className="flex flex-col items-center gap-1">
             <Link
               href="/settings"
-              className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950 hover:shadow-sm`}
+              className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-text hover:shadow-sm`}
               aria-label="Account settings"
             >
               <SettingsIcon />
@@ -223,7 +223,7 @@ function SidebarUserFooter({
             <form action={signOutAction}>
               <button
                 type="submit"
-                className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
+                className={`${navLinkFocus} inline-flex size-10 items-center justify-center rounded-none text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-text`}
                 aria-label="Log out"
               >
                 <LogOutIcon />
@@ -237,22 +237,22 @@ function SidebarUserFooter({
 
   return (
     <div
-      className={`shrink-0 border-t border-neutral-200/80 bg-[#fafafa]/95 ${bottomSafe}`}
+      className={`shrink-0 border-t border-ui-line/70 bg-ui-glass-panel ${bottomSafe}`}
     >
       <div className="p-3">
-        <div className="rounded-none border border-neutral-200/80 bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+        <div className="glass-muted rounded-none p-3">
           <div className="flex gap-3">
-            <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-none bg-neutral-200 text-[11px] font-semibold tracking-tight text-neutral-800 ring-1 ring-neutral-300/80">
+            <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-none bg-white/10 text-[11px] font-semibold tracking-tight text-ui-text ring-1 ring-ui-line">
               {safe}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold leading-tight text-neutral-950">
+              <p className="truncate text-[13px] font-semibold leading-tight text-ui-text">
                 {shortLabel}
               </p>
-              <div className="mt-3 flex flex-col gap-0.5 border-t border-neutral-100 pt-3">
+              <div className="mt-3 flex flex-col gap-0.5 border-t border-ui-line-soft pt-3">
                 <Link
                   href="/settings"
-                  className={`${navLinkFocus} inline-flex min-h-10 items-center gap-2 rounded-none px-1 text-[13px] font-medium text-neutral-600 transition-colors hover:text-neutral-950`}
+                  className={`${navLinkFocus} inline-flex min-h-10 items-center gap-2 rounded-none px-1 text-[13px] font-medium text-ui-muted transition-colors hover:text-ui-text`}
                 >
                   <SettingsIcon />
                   Account
@@ -260,7 +260,7 @@ function SidebarUserFooter({
                 <form action={signOutAction}>
                   <button
                     type="submit"
-                    className={`${navLinkFocus} inline-flex min-h-10 w-full items-center gap-2 px-1 text-left text-[13px] font-medium tracking-wide text-neutral-500 transition-colors hover:text-neutral-950`}
+                    className={`${navLinkFocus} inline-flex min-h-10 w-full items-center gap-2 px-1 text-left text-[13px] font-medium tracking-wide text-ui-muted transition-colors hover:text-ui-text`}
                   >
                     <LogOutIcon />
                     Log out
@@ -314,8 +314,8 @@ export function AppSidebar({
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         className={[
-          "relative hidden h-full min-h-0 shrink-0 flex-col border-r border-neutral-200/80 bg-[#fafafa] transition-[width,box-shadow] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:flex",
-          desktopExpanded ? "w-[248px] shadow-[6px_0_24px_rgba(0,0,0,0.05)]" : "w-[76px]",
+          "relative hidden h-full min-h-0 shrink-0 flex-col border-r border-ui-line/70 bg-ui-glass-panel transition-[width,box-shadow] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:flex",
+          desktopExpanded ? "w-[248px] shadow-[6px_0_30px_rgba(0,0,0,0.25)]" : "w-[76px]",
         ].join(" ")}
       >
         <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden [scrollbar-gutter:stable]">
@@ -334,7 +334,7 @@ export function AppSidebar({
       </aside>
 
       <div
-        className={`fixed inset-0 z-40 bg-helion-ink/20 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-black/35 backdrop-blur-[4px] transition-opacity duration-300 md:hidden ${
           mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
         aria-hidden={!mobileOpen}
@@ -342,23 +342,23 @@ export function AppSidebar({
       />
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-50 flex w-[min(300px,90vw)] max-w-full flex-col border-r border-neutral-200/80 bg-[#fafafa] shadow-[8px_0_40px_rgba(0,0,0,0.07)] transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:hidden",
+          "fixed inset-y-0 left-0 z-50 flex w-[min(300px,90vw)] max-w-full flex-col border-r border-ui-line/70 bg-ui-glass-panel shadow-[8px_0_40px_rgba(0,0,0,0.4)] transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] md:hidden",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
         ].join(" ")}
       >
-        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-neutral-200/80 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-ui-line/70 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
           <div className="min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-neutral-400">
+            <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-ui-muted-dim">
               Menu
             </p>
-            <p className="mt-0.5 truncate text-[13px] font-semibold text-neutral-900">
+            <p className="mt-0.5 truncate text-[13px] font-semibold text-ui-text">
               {displayName || "Account"}
             </p>
           </div>
           <button
             type="button"
             onClick={() => onMobileOpenChange(false)}
-            className={`${navLinkFocus} inline-flex size-11 shrink-0 items-center justify-center rounded-none text-neutral-500 transition-colors hover:bg-white hover:text-neutral-950`}
+            className={`${navLinkFocus} inline-flex size-11 shrink-0 items-center justify-center rounded-none text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-text`}
             aria-label="Close menu"
           >
             <CloseIcon />

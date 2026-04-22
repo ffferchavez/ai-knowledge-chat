@@ -30,7 +30,7 @@ export function RetryJobButton({ jobId }: { jobId: string }) {
         type="button"
         onClick={onClick}
         disabled={pending}
-        className="text-[11px] uppercase tracking-[0.12em] text-ui-muted underline underline-offset-4 hover:text-ui-text disabled:opacity-50"
+        className="text-[11px] uppercase tracking-[0.12em] text-ui-muted underline underline-offset-4 hover:text-ui-ink-deep disabled:opacity-50"
       >
         {pending ? "Retrying…" : "Retry"}
       </button>

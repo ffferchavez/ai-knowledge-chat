@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 
 import { ChatClient } from "@/components/chat/chat-client";
+import { siteConfig } from "@/lib/config";
 import { ChatPageShell } from "@/components/chat/chat-page-shell";
 import { createClient } from "@/lib/supabase/server";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
 
 export const metadata = {
-  title: "Chat — Helion Intelligence",
+  title: `Chat — ${siteConfig.name}`,
 };
 
 export default async function ChatPage() {

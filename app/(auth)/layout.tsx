@@ -7,7 +7,7 @@ export default function AuthLayout({
 }) {
   return (
     <div
-      className={`flex min-h-[100dvh] min-h-screen flex-1 flex-col bg-ui-bg pt-[env(safe-area-inset-top)] ${PAGE_INSET}`}
+      className={`flex min-h-[100dvh] min-h-screen flex-1 flex-col bg-transparent pt-[env(safe-area-inset-top)] ${PAGE_INSET}`}
     >
       {children}
     </div>

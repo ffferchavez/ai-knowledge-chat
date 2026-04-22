@@ -287,7 +287,7 @@ function IconMessageCircle({ className }: { className?: string }) {
   );
 }
 
-const SIDEBAR_STORAGE_KEY = "helion-intelligence-chat-sidebar";
+const SIDEBAR_STORAGE_KEY = "ai-knowledge-chat-sidebar";
 const COMPOSER_MIN_PX = 40;
 const COMPOSER_MAX_PX = 120;
 const MAX_PENDING_IMAGES = 6;
@@ -358,7 +358,7 @@ function useAssistantMarkdownComponents(
                 e.preventDefault();
                 onCitationClick(id);
               }}
-              className="mx-0.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center bg-neutral-200/90 px-1.5 align-baseline text-[10px] font-semibold tabular-nums text-neutral-600 transition-colors hover:bg-neutral-300/90 hover:text-neutral-900"
+              className="mx-0.5 inline-flex h-5 min-w-[1.25rem] items-center justify-center border border-ui-line bg-ui-surface px-1.5 align-baseline text-[10px] font-semibold tabular-nums text-ui-muted transition-colors hover:bg-ui-surface-hover hover:text-ui-ink-deep"
               title={`Source ${id}`}
             >
               {id}
@@ -370,7 +370,7 @@ function useAssistantMarkdownComponents(
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-neutral-700 underline decoration-neutral-300 underline-offset-2 hover:text-neutral-900"
+            className="font-medium text-ui-accent underline decoration-ui-line underline-offset-2 hover:text-ui-accent-hover"
             {...rest}
           >
             {children}
@@ -386,7 +386,7 @@ function useAssistantMarkdownComponents(
       ),
       li: ({ children }) => <li className="leading-relaxed">{children}</li>,
       strong: ({ children }) => (
-        <strong className="font-semibold text-neutral-900">{children}</strong>
+        <strong className="font-semibold text-ui-ink-deep">{children}</strong>
       ),
       em: ({ children }) => <em className="italic">{children}</em>,
       code: ({ className, children, ...props }) => {
@@ -399,13 +399,13 @@ function useAssistantMarkdownComponents(
           );
         }
         return (
-          <code className="bg-neutral-100 px-1.5 py-0.5 font-mono text-[0.9em] text-neutral-800">
+          <code className="bg-ui-surface px-1.5 py-0.5 font-mono text-[0.9em] text-ui-ink-deep">
             {children}
           </code>
         );
       },
       pre: ({ children }) => (
-        <pre className="my-3 overflow-x-auto border border-neutral-200 bg-neutral-50 p-3 text-sm">
+        <pre className="my-3 overflow-x-auto border border-ui-line bg-ui-surface p-3 text-sm">
           {children}
         </pre>
       ),
@@ -424,7 +424,7 @@ function AssistantMessageMarkdown({
   const components = useAssistantMarkdownComponents(onCitationClick);
   const processed = embedCitationLinks(text);
   return (
-    <div className="text-[15px] leading-[1.65] text-neutral-800 [&_a]:inline">
+    <div className="text-[15px] leading-[1.65] text-ui-text [&_a]:inline">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={components}
@@ -669,11 +669,11 @@ export function ChatClient({
   }
 
   return (
-    <div className="mt-0 flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden border-t border-black md:flex-row">
+    <div className="glass-panel mt-4 flex min-h-0 w-full min-w-0 flex-1 flex-col overflow-hidden md:flex-row">
       {sidebarOpen ? (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-neutral-900/35 backdrop-blur-[2px] transition-opacity md:hidden"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[4px] transition-opacity md:hidden"
           aria-label="Close chat list"
           onClick={() => setSidebarOpen(false)}
         />
@@ -681,12 +681,12 @@ export function ChatClient({
       <aside
         aria-hidden={!sidebarOpen}
         className={[
-          "flex shrink-0 flex-col overflow-hidden border-neutral-200 bg-white transition-[transform,max-height,width,min-width] duration-200 ease-out",
-          "max-md:fixed max-md:left-0 max-md:top-0 max-md:z-50 max-md:h-[100dvh] max-md:max-h-none max-md:w-[min(88vw,300px)] max-md:border-r max-md:border-neutral-200 max-md:shadow-[4px_0_24px_-4px_rgba(0,0,0,0.12)] max-md:pt-[env(safe-area-inset-top)]",
+          "flex shrink-0 flex-col overflow-hidden border-ui-line bg-ui-glass-panel transition-[transform,max-height,width,min-width] duration-200 ease-out",
+          "max-md:fixed max-md:left-0 max-md:top-0 max-md:z-50 max-md:h-[100dvh] max-md:max-h-none max-md:w-[min(88vw,300px)] max-md:border-r max-md:border-ui-line max-md:shadow-[4px_0_24px_-4px_rgba(0,0,0,0.45)] max-md:pt-[env(safe-area-inset-top)]",
           sidebarOpen
             ? "max-md:translate-x-0 max-md:pointer-events-auto"
             : "max-md:pointer-events-none max-md:-translate-x-full",
-          "md:relative md:inset-auto md:z-auto md:h-auto md:translate-x-0 md:shadow-none md:pt-0 md:border-b-0 md:border-r md:border-neutral-200",
+          "md:relative md:inset-auto md:z-auto md:h-auto md:translate-x-0 md:shadow-none md:pt-0 md:border-b-0 md:border-r md:border-ui-line",
           sidebarOpen
             ? "md:max-h-none md:min-h-0 md:w-[min(280px,100%)] md:min-w-[200px] md:max-w-[280px] md:self-stretch"
             : "md:pointer-events-none md:max-h-none md:min-h-0 md:w-0 md:min-w-0 md:max-w-0 md:border-0 md:self-stretch",
@@ -697,7 +697,7 @@ export function ChatClient({
             <button
               type="button"
               onClick={() => setSidebarOpen(false)}
-              className="inline-flex size-10 shrink-0 items-center justify-center text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800 md:size-auto md:p-1.5"
+              className="inline-flex size-10 shrink-0 items-center justify-center text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-ink-deep md:size-auto md:p-1.5"
               title="Close chat list"
               aria-label="Close chat list"
               aria-expanded={sidebarOpen}
@@ -705,7 +705,7 @@ export function ChatClient({
               <IconX className="size-[18px] md:hidden" />
               <IconChevronLeft className="hidden size-4 md:block" />
             </button>
-            <span className="inline-flex min-w-0 items-center gap-1.5 text-neutral-400" title="Chats">
+            <span className="inline-flex min-w-0 items-center gap-1.5 text-ui-muted-dim" title="Chats">
               <IconMessageSquare className="size-5 shrink-0 md:hidden" />
               <span className="hidden truncate text-[11px] font-medium md:inline">Chats</span>
             </span>
@@ -721,7 +721,7 @@ export function ChatClient({
               closeSidebarOnMobile();
               router.push("/chat");
             }}
-            className="inline-flex size-10 shrink-0 items-center justify-center bg-white text-neutral-700 shadow-sm transition-colors hover:bg-neutral-50 md:h-auto md:w-auto md:px-2.5 md:py-1"
+            className="ui-btn inline-flex size-10 shrink-0 border-ui-line bg-ui-surface text-ui-text shadow-sm md:h-auto md:w-auto md:px-2.5 md:py-1"
             title="New chat"
             aria-label="New chat"
           >
@@ -732,8 +732,8 @@ export function ChatClient({
         <div className="mt-2 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto overscroll-contain px-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] [scrollbar-gutter:stable] md:mt-2 md:px-3 md:pb-4">
           {sessions.length === 0 ? (
             <div className="flex flex-col items-center gap-2 px-1 py-4 text-center md:items-start md:py-0 md:text-left">
-              <IconMessageSquare className="mx-auto size-8 text-neutral-300 md:mx-0 md:hidden" />
-              <p className="text-xs leading-relaxed text-neutral-500">
+              <IconMessageSquare className="mx-auto size-8 text-ui-muted-dim md:mx-0 md:hidden" />
+              <p className="text-xs leading-relaxed text-ui-muted">
                 <span className="md:hidden">Nothing here yet - tap + above.</span>
                 <span className="hidden md:inline">No chats yet.</span>
               </p>
@@ -744,7 +744,7 @@ export function ChatClient({
                 key={s.id}
                 className={[
                   "group grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center",
-                  routeSessionId === s.id ? "bg-neutral-100" : "hover:bg-neutral-50",
+                  routeSessionId === s.id ? "bg-white/10" : "hover:bg-white/5",
                 ].join(" ")}
               >
                 <button
@@ -756,8 +756,8 @@ export function ChatClient({
                   className={[
                     "min-w-0 overflow-hidden px-2.5 py-1.5 text-left text-xs leading-snug transition-colors",
                     routeSessionId === s.id
-                      ? "font-medium text-neutral-900"
-                      : "text-neutral-600 hover:text-neutral-900",
+                      ? "font-medium text-ui-ink-deep"
+                      : "text-ui-muted hover:text-ui-ink-deep",
                   ].join(" ")}
                 >
                   <span className="block w-full truncate">{s.title || "Untitled"}</span>
@@ -767,7 +767,7 @@ export function ChatClient({
                   onClick={() => {
                     void deleteSession(s.id);
                   }}
-                  className="flex h-full shrink-0 items-center justify-center px-1.5 text-neutral-400 opacity-100 transition-colors hover:bg-neutral-200/80 hover:text-neutral-800 md:opacity-0 md:group-hover:opacity-100"
+                  className="flex h-full shrink-0 items-center justify-center px-1.5 text-ui-muted-dim opacity-100 transition-colors hover:bg-white/10 hover:text-ui-ink-deep md:opacity-0 md:group-hover:opacity-100"
                   title="Delete chat"
                   aria-label="Delete chat"
                 >
@@ -779,12 +779,12 @@ export function ChatClient({
         </div>
       </aside>
 
-      <section className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[#f4f4f5]">
+      <section className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-transparent">
         {!sidebarOpen ? (
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="absolute z-10 flex items-center justify-center border border-neutral-200 bg-white text-neutral-600 shadow-sm transition-colors hover:bg-neutral-50 left-2 top-2 sm:left-3 sm:top-3 max-md:!left-[max(0.5rem,env(safe-area-inset-left))] max-md:!top-[max(0.5rem,env(safe-area-inset-top))] max-md:size-12 max-md:border-neutral-200/90 max-md:bg-white/95 max-md:text-neutral-700 max-md:shadow-md max-md:backdrop-blur-sm max-md:hover:bg-white max-md:hover:text-neutral-900 md:gap-1.5 md:px-2 md:py-1.5 md:text-[11px] md:font-medium"
+            className="ui-btn absolute left-2 top-2 z-10 flex items-center justify-center border-ui-line bg-ui-surface text-ui-text shadow-sm transition-colors hover:bg-ui-surface-hover sm:left-3 sm:top-3 max-md:!left-[max(0.5rem,env(safe-area-inset-left))] max-md:!top-[max(0.5rem,env(safe-area-inset-top))] max-md:size-12 max-md:bg-ui-glass-panel md:gap-1.5 md:px-2 md:py-1.5 md:text-[11px] md:font-medium"
             title="Open chat list"
             aria-expanded={false}
             aria-label="Open chat list"
@@ -803,8 +803,8 @@ export function ChatClient({
         >
           {visibleMessages.length === 0 && !pending ? (
             <div className="mx-auto flex min-h-[12rem] max-w-2xl flex-col items-center justify-center px-2 py-8 text-center sm:min-h-[16rem]">
-              <IconMessageCircle className="mb-3 text-neutral-300 md:hidden" />
-              <p className="text-base font-medium text-neutral-800 md:font-normal md:text-base md:text-neutral-600">
+              <IconMessageCircle className="mb-3 text-ui-muted-dim md:hidden" />
+              <p className="text-base font-medium text-ui-ink-deep md:font-normal md:text-base md:text-ui-muted">
                 <span className="md:hidden">Ask below</span>
                 <span className="hidden md:inline">Ask anything below to begin</span>
               </p>
@@ -814,7 +814,7 @@ export function ChatClient({
               m.role === "user" ? (
                 <div key={m.id} className="group flex justify-end">
                   <div className="flex max-w-[min(85%,36rem)] flex-col items-end gap-1">
-                    <div className="bg-neutral-800 px-4 py-3 text-[15px] leading-relaxed text-white shadow-sm">
+                    <div className="glass-elevated px-4 py-3 text-[15px] leading-relaxed text-ui-ink-deep shadow-sm">
                       {m.attachments?.length ? (
                         <div className={m.content === "(Image)" ? "flex flex-col gap-2" : "mb-2 flex flex-col gap-2"}>
                           {m.attachments.map((att, idx) => (
@@ -822,7 +822,7 @@ export function ChatClient({
                               key={`${m.id}-att-${idx}`}
                               src={`data:${att.mime};base64,${att.data}`}
                               alt=""
-                              className="max-h-48 w-full max-w-sm border border-white/10 object-contain"
+                              className="max-h-48 w-full max-w-sm border border-ui-line object-contain"
                             />
                           ))}
                         </div>
@@ -835,7 +835,7 @@ export function ChatClient({
                       <button
                         type="button"
                         onClick={() => copyToClipboard(m.content)}
-                        className="p-1.5 text-neutral-500 transition-colors hover:bg-neutral-200 hover:text-neutral-800"
+                        className="p-1.5 text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-ink-deep"
                         title="Copy"
                         aria-label="Copy message"
                       >
@@ -848,7 +848,7 @@ export function ChatClient({
                           setRewindFromMessageId(m.id);
                           textareaRef.current?.focus();
                         }}
-                        className="p-1.5 text-neutral-500 transition-colors hover:bg-neutral-200 hover:text-neutral-800"
+                        className="p-1.5 text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-ink-deep"
                         title="Edit"
                         aria-label="Edit message"
                       >
@@ -860,7 +860,7 @@ export function ChatClient({
               ) : (
                 <div key={m.id} className="group flex justify-start">
                   <div className="w-full max-w-[min(92%,42rem)] space-y-2">
-                    <div className="relative border border-neutral-200/90 bg-white px-4 py-3 pr-10 shadow-sm">
+                    <div className="glass-muted relative px-4 py-3 pr-10 shadow-sm">
                       <AssistantMessageMarkdown
                         text={m.content}
                         onCitationClick={(id) => {
@@ -877,7 +877,7 @@ export function ChatClient({
                       <button
                         type="button"
                         onClick={() => copyToClipboard(m.content)}
-                        className="absolute right-1.5 top-1.5 p-1.5 text-neutral-400 opacity-100 transition-colors hover:bg-neutral-100 hover:text-neutral-700 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
+                        className="absolute right-1.5 top-1.5 p-1.5 text-ui-muted-dim opacity-100 transition-colors hover:bg-white/10 hover:text-ui-ink-deep sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100"
                         title="Copy"
                         aria-label="Copy reply"
                       >
@@ -886,19 +886,19 @@ export function ChatClient({
                     </div>
                     {m.citations?.length ? (
                       <details className="border border-transparent bg-transparent">
-                        <summary className="flex cursor-pointer list-none items-center gap-2 py-1.5 text-xs text-neutral-500 transition-colors marker:content-none hover:text-neutral-800 md:py-1 [&::-webkit-details-marker]:hidden">
-                          <span className="inline-flex items-center gap-2 rounded-full border border-neutral-200/90 bg-white px-2.5 py-1.5 text-[12px] font-medium text-neutral-700 shadow-sm md:gap-1.5 md:px-2 md:py-0.5 md:text-[11px] md:font-medium md:text-neutral-600">
-                            <IconBookOpen className="size-4 shrink-0 text-neutral-500 md:hidden" />
+                        <summary className="flex cursor-pointer list-none items-center gap-2 py-1.5 text-xs text-ui-muted transition-colors marker:content-none hover:text-ui-ink-deep md:py-1 [&::-webkit-details-marker]:hidden">
+                          <span className="inline-flex items-center gap-2 rounded-full border border-ui-line bg-ui-surface px-2.5 py-1.5 text-[12px] font-medium text-ui-muted shadow-sm md:gap-1.5 md:px-2 md:py-0.5 md:text-[11px] md:font-medium md:text-ui-muted">
+                            <IconBookOpen className="size-4 shrink-0 text-ui-muted md:hidden" />
                             <span className="tabular-nums md:hidden">{m.citations.length}</span>
                             <span className="hidden md:inline">
                               {m.citations.length} source{m.citations.length === 1 ? "" : "s"}
                             </span>
                           </span>
-                          <span className="text-neutral-400" title="Expand">
+                          <span className="text-ui-muted-dim" title="Expand">
                             <IconChevronDown className="size-4 md:hidden" />
                           </span>
                         </summary>
-                        <div className="mt-2 space-y-1 border-t border-neutral-200/60 pt-2">
+                        <div className="mt-2 space-y-1 border-t border-ui-line-soft pt-2">
                           {m.citations.map((c) => (
                             <div
                               key={`${m.id}-${c.id}`}
@@ -906,17 +906,17 @@ export function ChatClient({
                               className={[
                                 "px-2 py-2 transition-colors",
                                 focusedSourceKey === `${m.id}-${c.id}`
-                                  ? "bg-amber-50/90 ring-1 ring-amber-200/80"
-                                  : "bg-white/60 hover:bg-white",
+                                  ? "bg-ui-accent-muted ring-1 ring-ui-accent/60"
+                                  : "bg-ui-surface hover:bg-ui-surface-hover",
                               ].join(" ")}
                             >
-                              <p className="text-[11px] font-medium text-neutral-700">
-                                <span className="mr-1.5 inline-flex h-4 min-w-[1rem] items-center justify-center bg-neutral-200/80 text-[10px] font-semibold text-neutral-600">
+                              <p className="text-[11px] font-medium text-ui-ink-deep">
+                                <span className="mr-1.5 inline-flex h-4 min-w-[1rem] items-center justify-center bg-ui-surface-hover text-[10px] font-semibold text-ui-muted">
                                   {c.id}
                                 </span>
                                 <span className="break-all">{c.filename}</span>
                               </p>
-                              <p className="mt-1 line-clamp-2 text-[12px] leading-snug text-neutral-500">
+                              <p className="mt-1 line-clamp-2 text-[12px] leading-snug text-ui-muted">
                                 {c.excerpt}
                               </p>
                             </div>
@@ -931,27 +931,27 @@ export function ChatClient({
           )}
           {pending ? (
             <div className="flex justify-start">
-              <div className="border border-neutral-200/90 bg-white px-4 py-3 shadow-sm">
+              <div className="glass-muted px-4 py-3 shadow-sm">
                 <div className="flex items-center gap-1.5">
-                  <span className="size-2 animate-pulse bg-neutral-400 [animation-delay:0ms]" />
-                  <span className="size-2 animate-pulse bg-neutral-400 [animation-delay:150ms]" />
-                  <span className="size-2 animate-pulse bg-neutral-400 [animation-delay:300ms]" />
+                  <span className="size-2 animate-pulse bg-ui-muted [animation-delay:0ms]" />
+                  <span className="size-2 animate-pulse bg-ui-muted [animation-delay:150ms]" />
+                  <span className="size-2 animate-pulse bg-ui-muted [animation-delay:300ms]" />
                 </div>
               </div>
             </div>
           ) : null}
         </div>
 
-        <div className="shrink-0 border-t border-neutral-200/80 bg-[#f4f4f5] p-2 sm:p-3">
+        <div className="shrink-0 border-t border-ui-line/70 bg-transparent p-2 sm:p-3">
           {rewindFromMessageId ? (
-            <div className="mx-auto mb-2 flex max-w-3xl flex-col gap-2 border border-neutral-300/80 bg-white px-3 py-2.5 text-xs leading-relaxed text-neutral-600 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2 sm:py-2">
+            <div className="glass-muted mx-auto mb-2 flex max-w-3xl flex-col gap-2 px-3 py-2.5 text-xs leading-relaxed text-ui-muted sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2 sm:py-2">
               <span>
                 Edit mode - send replaces this message and the reply under it.
               </span>
               <button
                 type="button"
                 onClick={() => setRewindFromMessageId(null)}
-                className="inline-flex items-center justify-center gap-1 border border-neutral-200 px-2 py-2 text-[11px] font-medium uppercase tracking-wide text-neutral-700 hover:bg-neutral-50 md:py-1"
+                className="ui-btn inline-flex min-h-0 items-center justify-center gap-1 px-2 py-2 text-[11px] uppercase tracking-wide md:py-1"
                 title="Cancel editing"
                 aria-label="Cancel editing"
               >
@@ -971,7 +971,7 @@ export function ChatClient({
               ev.stopPropagation();
               void addImageFiles(ev.dataTransfer.files);
             }}
-            className="mx-auto flex w-full max-w-3xl flex-col gap-1.5 border border-neutral-200 bg-white p-2 shadow-sm focus-within:border-neutral-300 focus-within:ring-2 focus-within:ring-neutral-200/50"
+            className="glass-elevated mx-auto flex w-full max-w-3xl flex-col gap-1.5 p-2 shadow-sm focus-within:border-ui-accent/70 focus-within:ring-2 focus-within:ring-ui-accent/30"
           >
             <input
               ref={fileInputRef}
@@ -994,12 +994,12 @@ export function ChatClient({
                     <img
                       src={`data:${img.mime};base64,${img.data}`}
                       alt=""
-                      className="h-12 w-12 border border-neutral-200 object-cover"
+                      className="h-12 w-12 border border-ui-line object-cover"
                     />
                     <button
                       type="button"
                       onClick={() => setPendingImages((p) => p.filter((x) => x.id !== img.id))}
-                      className="absolute -right-1 -top-1 flex size-5 items-center justify-center border border-neutral-300 bg-white text-neutral-600 shadow-sm hover:bg-neutral-100"
+                      className="absolute -right-1 -top-1 flex size-5 items-center justify-center border border-ui-line bg-ui-surface text-ui-muted shadow-sm hover:bg-ui-surface-hover"
                       aria-label="Remove image"
                     >
                       <IconX className="size-3" />
@@ -1034,14 +1034,14 @@ export function ChatClient({
                 rows={1}
                 disabled={pending}
                 placeholder="Message..."
-                className="min-h-[40px] max-h-[120px] min-w-0 flex-1 resize-none overflow-y-auto bg-transparent px-2 py-2 text-[15px] leading-5 text-neutral-900 outline-none placeholder:text-neutral-400 disabled:opacity-50"
+                className="min-h-[40px] max-h-[120px] min-w-0 flex-1 resize-none overflow-y-auto bg-transparent px-2 py-2 text-[15px] leading-5 text-ui-ink-deep outline-none placeholder:text-ui-muted-dim disabled:opacity-50"
               />
               <div className="flex shrink-0 items-center gap-0.5 self-end pb-0.5">
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={pending || pendingImages.length >= MAX_PENDING_IMAGES}
-                  className="p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="p-2 text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-ink-deep disabled:cursor-not-allowed disabled:opacity-40"
                   title="Add images"
                   aria-label="Add images"
                 >
@@ -1053,8 +1053,8 @@ export function ChatClient({
                     onClick={() => speech.toggle()}
                     disabled={pending}
                     className={[
-                      "p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800 disabled:opacity-40",
-                      speech.listening ? "bg-red-50 text-red-700 ring-1 ring-red-200/80" : "",
+                      "p-2 text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-ink-deep disabled:opacity-40",
+                      speech.listening ? "bg-ui-accent-muted text-ui-accent ring-1 ring-ui-accent/60" : "",
                     ].join(" ")}
                     title={speech.listening ? "Stop dictation" : "Dictate (voice to text)"}
                     aria-label={speech.listening ? "Stop dictation" : "Dictate with microphone"}
@@ -1066,7 +1066,7 @@ export function ChatClient({
                 <button
                   type="submit"
                   disabled={pending || (!question.trim() && pendingImages.length === 0)}
-                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center bg-neutral-900 px-2.5 text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-40 md:min-h-0 md:min-w-0 md:px-3 md:py-1.5 md:text-[11px] md:font-medium md:uppercase md:tracking-wide"
+                  className="ui-btn ui-btn-primary inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2.5 md:min-h-0 md:min-w-0 md:px-3 md:py-1.5 md:text-[11px] md:font-medium md:uppercase md:tracking-wide"
                   title={pending ? "Sending..." : "Send"}
                   aria-label={pending ? "Sending" : "Send message"}
                 >

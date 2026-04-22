@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { AppSidebar } from "@/components/app/app-sidebar";
+import { siteConfig } from "@/lib/config";
 import { CHAT_MAIN_PAD, MAIN_PAD, PAGE_INSET } from "@/lib/ui/shell";
 
 function MenuIcon() {
@@ -32,7 +33,7 @@ function MenuIcon() {
 function AppSidebarPlaceholder() {
   return (
     <aside
-      className="relative hidden h-full min-h-0 w-[76px] shrink-0 flex-col border-r border-neutral-200/80 bg-[#fafafa] md:flex"
+      className="relative hidden h-full min-h-0 w-[76px] shrink-0 flex-col border-r border-ui-line/70 bg-ui-glass-panel md:flex"
       aria-hidden
     />
   );
@@ -41,12 +42,10 @@ function AppSidebarPlaceholder() {
 export function AppShell({
   displayName,
   initials,
-  portalDashboardHref,
   children,
 }: {
   displayName: string;
   initials: string;
-  portalDashboardHref: string;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -79,13 +78,13 @@ export function AppShell({
     <div
       className={
         isChatRoute
-          ? "flex h-[100dvh] max-h-[100dvh] min-h-0 w-full flex-col overflow-hidden bg-[#fafafa]"
-          : "flex min-h-[100dvh] min-h-screen flex-1 flex-col bg-[#fafafa]"
+          ? "flex h-[100dvh] max-h-[100dvh] min-h-0 w-full flex-col overflow-hidden bg-transparent"
+          : "flex min-h-[100dvh] min-h-screen flex-1 flex-col bg-transparent"
       }
       suppressHydrationWarning
     >
       <header
-        className="public-header-safe-top shrink-0 border-b border-neutral-200/80 bg-white"
+        className="public-header-safe-top glass-panel shrink-0 border-b border-ui-line/70"
         suppressHydrationWarning
       >
         <div
@@ -97,37 +96,28 @@ export function AppShell({
                 <button
                   type="button"
                   onClick={() => setMobileNavOpen(true)}
-                  className="inline-flex size-11 shrink-0 items-center justify-center rounded-none text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950 md:hidden"
+                  className="inline-flex size-11 shrink-0 items-center justify-center text-ui-muted transition-colors hover:bg-white/10 hover:text-ui-text md:hidden"
                   aria-label="Open menu"
                 >
                   <MenuIcon />
                 </button>
                 <Link
                   href="/dashboard"
-                  className="inline-flex min-h-[44px] items-center gap-2 font-sans text-sm uppercase tracking-[0.14em] sm:gap-2.5 sm:text-base"
+                  className="inline-flex min-h-[44px] items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.14em] text-ui-ink-deep sm:gap-2.5 sm:text-base"
                 >
-                  <span className="font-normal text-neutral-950">Helion</span>
-                  <span className="font-bold text-neutral-950">Intelligence</span>
+                  {siteConfig.name}
                 </Link>
               </>
             ) : (
               <>
                 <div className="inline-flex size-11 shrink-0 md:hidden" aria-hidden />
                 <div
-                  className="inline-flex min-h-[44px] min-w-[10rem] items-center rounded-sm bg-neutral-100/90 sm:min-h-[44px]"
+                  className="inline-flex min-h-[44px] min-w-[10rem] items-center rounded-sm bg-ui-surface sm:min-h-[44px]"
                   aria-hidden
                 />
               </>
             )}
           </div>
-          <Link
-            href={portalDashboardHref}
-            className="inline-flex min-h-9 shrink-0 items-center rounded-none border border-neutral-200/90 bg-white px-3 text-[13px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-neutral-950"
-            title="Back to Helion Platform"
-            aria-label="Back to Helion Platform"
-          >
-            Platform
-          </Link>
         </div>
       </header>
 

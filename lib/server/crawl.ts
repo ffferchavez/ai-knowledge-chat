@@ -22,7 +22,7 @@ export async function fetchWebPage(url: string): Promise<FetchedWebPage> {
   const response = await fetch(url, {
     redirect: "follow",
     headers: {
-      "user-agent": "HelionKnowledgeBot/1.0 (+https://helion.city)",
+      "user-agent": "KnowledgeChatFetcher/1.0",
       accept: "text/html,application/xhtml+xml",
     },
   });

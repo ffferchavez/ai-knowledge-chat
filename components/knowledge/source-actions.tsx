@@ -63,7 +63,7 @@ export function SourceActions({
       {sourceType === "web" ? (
         <Link
           href={`/knowledge/${sourceId}`}
-          className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 hover:text-ui-text hover:underline"
+          className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 hover:text-ui-ink-deep hover:underline"
         >
           View
         </Link>
@@ -72,7 +72,7 @@ export function SourceActions({
         type="button"
         onClick={reindex}
         disabled={pending}
-        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 hover:text-ui-text hover:underline disabled:opacity-50"
+        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 hover:text-ui-ink-deep hover:underline disabled:opacity-50"
       >
         Reindex
       </button>
@@ -80,7 +80,7 @@ export function SourceActions({
         type="button"
         onClick={remove}
         disabled={pending}
-        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 hover:text-ui-text hover:underline disabled:opacity-50"
+        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 hover:text-ui-ink-deep hover:underline disabled:opacity-50"
       >
         Delete
       </button>

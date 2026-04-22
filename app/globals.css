@@ -1,25 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --ui-bg: #fafafa;
-  --ui-bg-muted: #f4f4f5;
-  --ui-ink: #0a0a0a;
-  --ui-ink-deep: #050505;
-  --ui-surface: #f4f4f5;
-  --ui-surface-hover: #e4e4e7;
-  --ui-line: #0a0a0a;
-  --ui-line-soft: rgba(10, 10, 10, 0.1);
-  --ui-text: #0a0a0a;
-  --ui-muted: #52525b;
-  --ui-muted-dim: #71717a;
-  --ui-yellow: #facc15;
-  --ui-yellow-bright: #ffea00;
-  --ui-yellow-muted: rgba(250, 204, 21, 0.22);
-  --ui-accent: #0d9488;
-  --ui-accent-hover: #0f766e;
-  --ui-accent-muted: rgba(13, 148, 136, 0.12);
-  --ui-on-accent: #ffffff;
-  --ui-warning: #9a3412;
+  --ui-bg: #050810;
+  --ui-bg-muted: #0b1120;
+  --ui-ink: #dce9ff;
+  --ui-ink-deep: #f4f9ff;
+  --ui-surface: rgba(18, 28, 48, 0.56);
+  --ui-surface-hover: rgba(28, 40, 67, 0.78);
+  --ui-line: rgba(175, 205, 255, 0.22);
+  --ui-line-soft: rgba(175, 205, 255, 0.1);
+  --ui-text: #e8f1ff;
+  --ui-muted: #a8b7d2;
+  --ui-muted-dim: #7f91b0;
+  --ui-yellow: #f7d95d;
+  --ui-yellow-bright: #ffea91;
+  --ui-yellow-muted: rgba(248, 218, 102, 0.25);
+  --ui-accent: #66d0ff;
+  --ui-accent-hover: #8edfff;
+  --ui-accent-muted: rgba(102, 208, 255, 0.2);
+  --ui-on-accent: #04101f;
+  --ui-warning: #ff8677;
+  --ui-glass-panel: rgba(12, 19, 35, 0.6);
+  --ui-glass-panel-strong: rgba(18, 28, 48, 0.78);
+  --ui-glass-elevated: rgba(24, 38, 62, 0.86);
+  --ui-glass-ring: rgba(196, 222, 255, 0.2);
+  --ui-glass-shadow: 0 20px 60px -30px rgba(2, 6, 18, 0.95);
+  --ui-glass-blur: 16px;
 }
 
 @theme inline {
@@ -41,6 +47,10 @@
   --color-ui-muted: var(--ui-muted);
   --color-ui-muted-dim: var(--ui-muted-dim);
   --color-ui-warning: var(--ui-warning);
+  --color-ui-glass-panel: var(--ui-glass-panel);
+  --color-ui-glass-panel-strong: var(--ui-glass-panel-strong);
+  --color-ui-glass-elevated: var(--ui-glass-elevated);
+  --color-ui-glass-ring: var(--ui-glass-ring);
   --font-sans: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
@@ -52,7 +62,11 @@
 }
 
 body {
-  background-color: var(--ui-bg);
+  background:
+    radial-gradient(circle at 12% -6%, rgba(94, 209, 255, 0.24), transparent 38%),
+    radial-gradient(circle at 88% 2%, rgba(120, 162, 255, 0.2), transparent 35%),
+    radial-gradient(circle at 58% 108%, rgba(46, 84, 158, 0.28), transparent 48%),
+    var(--ui-bg);
   color: var(--ui-text);
   font-family: var(--font-syne), ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
@@ -70,5 +84,149 @@ a {
 
 ::selection {
   background: var(--ui-yellow-muted);
-  color: var(--ui-ink-deep);
+  color: #101322;
+}
+
+.glass-panel {
+  background: linear-gradient(
+      168deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.02) 35%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    var(--ui-glass-panel);
+  border: 1px solid var(--ui-glass-ring);
+  backdrop-filter: blur(var(--ui-glass-blur));
+  box-shadow: var(--ui-glass-shadow);
+}
+
+.glass-elevated {
+  background: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.2) -30%,
+      rgba(255, 255, 255, 0.04) 38%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    var(--ui-glass-elevated);
+  border: 1px solid rgba(215, 230, 255, 0.24);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--ui-glass-shadow);
+}
+
+.glass-muted {
+  background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.015) 45%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    rgba(11, 18, 33, 0.45);
+  border: 1px solid rgba(169, 198, 244, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.ui-kicker {
+  color: var(--ui-muted-dim);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.ui-input {
+  width: 100%;
+  border: 1px solid rgba(194, 220, 255, 0.28);
+  background: rgba(8, 13, 25, 0.6);
+  color: var(--ui-text);
+  padding: 0.625rem 0.75rem;
+  outline: none;
+}
+
+.ui-input::placeholder {
+  color: var(--ui-muted-dim);
+}
+
+.ui-input:focus-visible {
+  border-color: rgba(139, 205, 255, 0.65);
+  box-shadow:
+    0 0 0 1px rgba(139, 205, 255, 0.55),
+    0 0 0 4px rgba(102, 208, 255, 0.15);
+}
+
+.ui-btn {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(191, 219, 255, 0.32);
+  background: rgba(9, 14, 28, 0.5);
+  color: var(--ui-text);
+  padding: 0.5rem 1rem;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.ui-btn:hover {
+  border-color: rgba(170, 213, 255, 0.56);
+  background: rgba(15, 23, 42, 0.78);
+}
+
+.ui-btn-primary {
+  border-color: rgba(138, 214, 255, 0.68);
+  background: linear-gradient(145deg, rgba(98, 205, 255, 0.4), rgba(59, 156, 255, 0.28)),
+    rgba(11, 24, 42, 0.85);
+  color: #f3f9ff;
+}
+
+.ui-btn-primary:hover {
+  border-color: rgba(169, 224, 255, 0.85);
+  background: linear-gradient(145deg, rgba(113, 211, 255, 0.52), rgba(78, 170, 255, 0.34)),
+    rgba(12, 28, 50, 0.88);
+}
+
+.ui-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.ui-link-row {
+  display: flex;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(175, 205, 255, 0.22);
+  padding: 1rem 0;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.ui-link-row:hover {
+  background: rgba(160, 200, 255, 0.05);
+  border-color: rgba(175, 205, 255, 0.35);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --ui-bg: #edf3ff;
+    --ui-bg-muted: #e4ecfb;
+    --ui-surface: rgba(255, 255, 255, 0.74);
+    --ui-surface-hover: rgba(248, 252, 255, 0.95);
+    --ui-line: rgba(29, 44, 78, 0.24);
+    --ui-line-soft: rgba(29, 44, 78, 0.14);
+    --ui-text: #0d1a35;
+    --ui-muted: #304266;
+    --ui-muted-dim: #536587;
+    --ui-accent: #0e73d4;
+    --ui-accent-hover: #0a63be;
+    --ui-on-accent: #ffffff;
+    --ui-warning: #a92f24;
+    --ui-glass-panel: rgba(255, 255, 255, 0.74);
+    --ui-glass-panel-strong: rgba(255, 255, 255, 0.9);
+    --ui-glass-elevated: rgba(252, 255, 255, 0.96);
+    --ui-glass-ring: rgba(35, 72, 133, 0.18);
+    --ui-glass-shadow: 0 22px 64px -34px rgba(29, 60, 116, 0.45);
+  }
 }

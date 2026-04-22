@@ -58,13 +58,13 @@ export function CreateFolderForm({
           onChange={(e) => setName(e.target.value)}
           placeholder="e.g. Policies, Clients…"
           disabled={pending}
-          className="mt-1.5 w-full min-w-0 border border-black bg-white px-3 py-2 text-sm text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50"
+          className="ui-input mt-1.5 min-w-0 text-sm disabled:opacity-50"
         />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="shrink-0 border border-black bg-ui-text px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-white transition-colors hover:bg-ui-ink-deep disabled:opacity-50"
+        className="ui-btn ui-btn-primary min-h-0 shrink-0 rounded-none px-4 py-2 text-xs uppercase tracking-[0.18em]"
       >
         {pending ? "Creating..." : "Create"}
       </button>

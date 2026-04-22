@@ -52,7 +52,7 @@ export function MoveSourceFolder({
         defaultValue=""
         disabled={pending}
         onChange={onChange}
-        className="max-w-full border border-black/20 bg-white px-2 py-1.5 text-[11px] text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50"
+        className="ui-input max-w-full px-2 py-1.5 text-[11px] disabled:opacity-50"
       >
         <option value="" disabled>
           Move to...

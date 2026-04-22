@@ -64,7 +64,7 @@ export function SavedSessionActions({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={pending}
-            className="min-w-[180px] rounded-none border border-black px-2 py-1 text-sm"
+            className="ui-input min-w-[180px] rounded-none px-2 py-1 text-sm"
           />
           <button
             type="button"

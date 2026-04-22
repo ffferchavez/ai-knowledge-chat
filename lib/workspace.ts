@@ -55,6 +55,7 @@ export async function getWorkspaceSnapshot(): Promise<WorkspaceSnapshot | null> 
   if (orgError || !org) return null;
 
   const { data: kb, error: kbError } = await supabase
+    .schema("public")
     .from("knowledge_bases")
     .select("id, name, slug")
     .eq("organization_id", org.id)
@@ -65,11 +66,13 @@ export async function getWorkspaceSnapshot(): Promise<WorkspaceSnapshot | null> 
   if (kbError || !kb) return null;
 
   const { count: docCount } = await supabase
+    .schema("public")
     .from("documents")
     .select("id", { count: "exact", head: true })
     .eq("knowledge_base_id", kb.id);
 
   const { count: sessionCount } = await supabase
+    .schema("intelligence")
     .from("chat_sessions")
     .select("id", { count: "exact", head: true })
     .eq("user_id", user.id)

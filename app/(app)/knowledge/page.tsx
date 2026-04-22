@@ -5,17 +5,17 @@ import { AddSourceCardsSection } from "@/components/knowledge/add-source-cards-s
 import { CreateFolderForm } from "@/components/knowledge/create-folder-form";
 import { KnowledgeFolderNav } from "@/components/knowledge/knowledge-folder-nav";
 import { MoveSourceFolder } from "@/components/knowledge/move-source-folder";
-import { ProcessJobsButton } from "@/components/knowledge/process-jobs-button";
 import { RetryJobButton } from "@/components/knowledge/retry-job-button";
 import { SourceActions } from "@/components/knowledge/source-actions";
 import { formatBytes } from "@/lib/format-bytes";
 import type { SourceFolderRow } from "@/lib/server/knowledge-folders";
 import { folderPathLabel } from "@/lib/server/knowledge-folders";
+import { siteConfig } from "@/lib/config";
 import { createClient } from "@/lib/supabase/server";
 import { getWorkspaceSnapshot } from "@/lib/workspace";
 
 export const metadata = {
-  title: "Sources — Helion Intelligence",
+  title: `Sources — ${siteConfig.name}`,
 };
 
 function statusLabel(status: string) {
@@ -30,6 +30,19 @@ function statusLabel(status: string) {
       return "Failed";
     default:
       return status;
+  }
+}
+
+function importJobLabel(jobType: string) {
+  switch (jobType) {
+    case "web_crawl":
+      return "Website";
+    case "file_ingest":
+      return "File";
+    case "reindex":
+      return "Refresh";
+    default:
+      return "Import";
   }
 }
 
@@ -275,39 +288,42 @@ export default async function KnowledgePage({
 
   return (
     <div className="flex w-full min-w-0 flex-col">
-      <header className="w-full border-b border-black pb-8 sm:pb-10">
-        <p className="text-[10px] font-medium uppercase tracking-[0.35em] text-ui-muted-dim">
+      <header className="glass-panel w-full p-6 sm:p-8">
+        <p className="ui-kicker">
           Sources
         </p>
-        <h1 className="mt-3 text-2xl font-medium tracking-[-0.03em] text-ui-text sm:mt-4 sm:text-3xl md:text-4xl">
+        <h1 className="mt-3 text-2xl font-medium tracking-[-0.03em] text-ui-ink-deep sm:mt-4 sm:text-3xl md:text-4xl">
           Manage your knowledge sources
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ui-muted sm:mt-6 sm:text-base">
-          {snap.organization.name} · {snap.knowledgeBase.name}. Files, text, and websites all flow through one indexed sources system.
+          {snap.organization.name} · {snap.knowledgeBase.name}. Add files, text, or
+          web pages—everything you add shows up here for chat.
         </p>
       </header>
 
-      <section className="mt-0 w-full border-t border-black py-8 sm:py-10">
+      <section className="glass-panel mt-4 w-full p-6 sm:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">Ingestion Jobs</p>
-            <p className="mt-2 text-sm text-ui-muted">Queued: {counts.queued} · Running: {counts.running} · Failed: {counts.failed}</p>
+            <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">Imports</p>
+            <p className="mt-2 text-sm text-ui-muted">
+              Waiting: {counts.queued} · In progress: {counts.running} · Needs attention:{" "}
+              {counts.failed}
+            </p>
           </div>
-          <ProcessJobsButton />
         </div>
         {failedJobs && failedJobs.length > 0 ? (
-          <div className="mt-4 space-y-2 border-t border-black/20 pt-3">
+          <div className="mt-4 space-y-2 border-t border-ui-line-soft pt-3">
             {failedJobs.map((job) => (
               <div
                 key={job.id}
-                className="flex flex-wrap items-start justify-between gap-3 border border-black/20 bg-white px-3 py-2"
+                className="glass-muted flex flex-wrap items-start justify-between gap-3 px-3 py-2"
               >
                 <div className="min-w-0">
                   <p className="text-xs uppercase tracking-[0.14em] text-ui-muted-dim">
-                    {job.job_type} · attempt {job.attempts}/{job.max_attempts}
+                    {importJobLabel(job.job_type)} · try {job.attempts} of {job.max_attempts}
                   </p>
                   <p className="mt-1 max-w-2xl text-sm text-ui-warning">
-                    {job.error_message || "Unknown ingestion failure."}
+                    {job.error_message || "Something went wrong while importing."}
                   </p>
                 </div>
                 <RetryJobButton jobId={job.id} />
@@ -322,16 +338,16 @@ export default async function KnowledgePage({
         defaultFolderId={defaultFolderId}
       />
 
-      <section className="w-full border-t border-black py-8 sm:py-10">
+      <section className="glass-panel mt-4 w-full p-6 sm:p-8">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-[10px] font-medium uppercase tracking-[0.25em] text-ui-muted-dim">All Sources</p>
             <p className="mt-1 text-sm text-ui-muted">
-              Viewing: <span className="font-medium text-ui-text">{folderCrumb}</span>
+              Viewing: <span className="font-medium text-ui-ink-deep">{folderCrumb}</span>
               {activeFolder !== "all" ? (
                 <>
                   {" "}·{" "}
-                  <Link href="/knowledge" className="underline-offset-4 hover:text-ui-text hover:underline">
+                  <Link href="/knowledge" className="underline-offset-4 hover:text-ui-ink-deep hover:underline">
                     Clear filter
                   </Link>
                 </>
@@ -348,15 +364,15 @@ export default async function KnowledgePage({
           {rows.length === 0 ? (
             <p className="text-sm text-ui-muted">No sources in this view.</p>
           ) : (
-            <div className="w-full overflow-x-auto">
+            <div className="glass-muted w-full overflow-x-auto p-3">
               <table className="w-full min-w-[980px] border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-black">
+                <tr className="border-b border-ui-line">
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Name</th>
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Folder</th>
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Type</th>
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Status</th>
-                  <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Chunks</th>
+                  <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Segments</th>
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Size</th>
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Created by</th>
                   <th className="pb-3 pr-4 text-[10px] font-medium uppercase tracking-[0.2em] text-ui-muted-dim">Added</th>
@@ -366,8 +382,8 @@ export default async function KnowledgePage({
               </thead>
               <tbody>
                 {rows.map((row) => (
-                  <tr key={`${row.type}-${row.id}`} className="border-b border-black/20 last:border-0">
-                    <td className="max-w-[14rem] py-4 pr-4 align-top font-medium text-ui-text">
+                  <tr key={`${row.type}-${row.id}`} className="border-b border-ui-line-soft last:border-0">
+                    <td className="max-w-[14rem] py-4 pr-4 align-top font-medium text-ui-ink-deep">
                       <span className="line-clamp-2">{row.name}</span>
                       {row.error ? <p className="mt-1 text-xs font-normal text-ui-warning">{row.error}</p> : null}
                     </td>
@@ -375,7 +391,7 @@ export default async function KnowledgePage({
                       {row.folderLabel ?? "—"}
                     </td>
                     <td className="py-4 pr-4 align-top">
-                      <span className="inline-flex items-center border border-black/20 bg-white px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-ui-muted">{row.type}</span>
+                      <span className="inline-flex items-center border border-ui-line bg-ui-surface px-2 py-1 text-[10px] font-medium uppercase tracking-[0.15em] text-ui-muted">{row.type}</span>
                     </td>
                     <td className="py-4 pr-4 align-top text-ui-muted">{statusLabel(row.status)}</td>
                     <td className="py-4 pr-4 align-top tabular-nums text-ui-muted">{row.chunks}</td>

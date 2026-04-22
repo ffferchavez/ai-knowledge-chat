@@ -53,7 +53,7 @@ export function DocumentUploadForm({ compact, defaultFolderId }: Props) {
 
   const dense = compact === true;
   const submitClassName = [
-    "border border-black bg-ui-text px-4 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors hover:bg-ui-ink-deep disabled:opacity-50",
+    "ui-btn ui-btn-primary min-h-0 rounded-none px-4 py-2.5 text-xs uppercase tracking-[0.2em]",
     dense ? "w-full" : "shrink-0",
   ].join(" ");
 
@@ -82,12 +82,11 @@ export function DocumentUploadForm({ compact, defaultFolderId }: Props) {
             type="file"
             accept={ACCEPT}
             disabled={pending}
-            className="mt-2 block w-full border border-black bg-white px-3 py-2.5 text-sm text-ui-text file:mr-4 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-ui-text outline-none focus-visible:ring-2 focus-visible:ring-neutral-950/15 disabled:opacity-50"
+            className="ui-input mt-2 block text-sm file:mr-4 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-ui-muted disabled:opacity-50"
           />
           <p className={dense ? "mt-1.5 text-[11px] leading-relaxed text-ui-muted" : "mt-2 text-xs leading-relaxed text-ui-muted"}>
-            PDF, TXT, or DOCX · up to 50 MB · indexing starts automatically
-            after upload (inline for small files, queued worker for larger
-            files).
+            PDF, TXT, or DOCX · up to 50 MB · processing usually finishes shortly
+            after upload.
           </p>
         </div>
         {dense ? null : (

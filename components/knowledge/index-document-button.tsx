@@ -42,7 +42,7 @@ export function IndexDocumentButton({
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-text hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+        className="text-[13px] font-medium tracking-wide text-ui-muted underline-offset-4 transition-colors hover:text-ui-ink-deep hover:underline disabled:cursor-not-allowed disabled:opacity-50"
       >
         {pending
           ? "Queueing…"
