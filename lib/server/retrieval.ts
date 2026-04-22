@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { createClient } from "@/lib/supabase/server";
 
 import { getEmbeddingModel, getOpenAIClient } from "@/lib/server/openai";
 
@@ -68,7 +68,7 @@ function lexicalScore(query: string, content: string) {
 }
 
 export async function retrieveRelevantChunks(
-  supabase: SupabaseClient,
+  supabase: Awaited<ReturnType<typeof createClient>>,
   input: {
     question: string;
     organizationId: string;
